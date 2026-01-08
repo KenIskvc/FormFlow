@@ -6,9 +6,14 @@
     xmlns:local="clr-namespace:FormFlow.MobileApp"
     Title="FormFlow.MobileApp">
 
+    <!-- <ShellContent -->
+    <!--     Title="Home" -->
+    <!--     ContentTemplate="{DataTemplate local:MainPage}" -->
+    <!--     Route="MainPage" /> -->
+
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Upload"
+        ContentTemplate="{DataTemplate local:UploadPage}"
+        Route="UploadPage" />
 
 </Shell>

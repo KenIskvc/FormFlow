@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FormFlow.MobileApp.UploadPage"
+             Title="UploadPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <!-- <Label  -->
+            <!--     Text="Upload" -->
+            <!--     VerticalOptions="Center"  -->
+            <!--     HorizontalOptions="Center" /> -->
+
+            <!-- Page Heading -->
+            <Label
+                Text="Upload Training Video"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!-- Description -->
+            <Label
+                Text="Upload a training video to start the analysis."
+                FontSize="14"
+                HorizontalTextAlignment="Center" />
+
+            <Button Text="Select a video"
+                    Clicked="OnSelectVideoClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+    
+</ContentPage>
