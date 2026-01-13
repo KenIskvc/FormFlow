@@ -27,7 +27,7 @@
                 HorizontalTextAlignment="Center" />
 
             <Button Text="Select a video"
-                    Clicked="OnSelectVideoClicked" />
+                    Clicked="OnSelectVideoClicked"/>
         </VerticalStackLayout>
     </ScrollView>
     
