@@ -2,33 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FormFlow.MobileApp.UploadPage"
-             Title="UploadPage">
+             Title="Upload Video">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <!-- <Label  -->
-            <!--     Text="Upload" -->
-            <!--     VerticalOptions="Center"  -->
-            <!--     HorizontalOptions="Center" /> -->
+        <VerticalStackLayout Spacing="25" Padding="30">
 
-            <!-- Page Heading -->
-            <Label
-                Text="Upload Training Video"
-                FontSize="24"
-                FontAttributes="Bold"
-                HorizontalOptions="Center" />
+            <Image Source="form_flow_logo.png"
+                   HeightRequest="150"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Center" />
 
-            <!-- Description -->
-            <Label
-                Text="Upload a training video to start the analysis."
-                FontSize="14"
-                HorizontalTextAlignment="Center" />
+            <Label Text="Upload Training Video"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
 
-            <Button Text="Select a video"
-                    Clicked="OnSelectVideoClicked"/>
+            <Label Text="Upload a video to start your AI-powered analysis."
+                   FontSize="16"
+                   TextColor="Gray"
+                   HorizontalTextAlignment="Center" />
+
+            <Border StrokeShape="RoundRectangle 10" Padding="20" BackgroundColor="#F0F0F0">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Select Video Source" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center" />
+
+                    <Button Text="Choose Video"
+                            Clicked="OnSelectVideoClicked"
+                            BackgroundColor="#2196F3"
+                            TextColor="White" />
+
+                    <Button Text="Back to Home"
+                            Clicked="OnBackClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="Gray" />
+                </VerticalStackLayout>
+            </Border>
+
         </VerticalStackLayout>
     </ScrollView>
-    
 </ContentPage>
