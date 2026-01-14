@@ -73,54 +73,54 @@ public partial class AnalysisPage : ContentPage
 
         _analyses.Add(new AnalysisItem
         {
-            Title = "Sprungaufschlag",
+            Title = "Jump serve",
             Date = "12.01.2026",
-            Status = "Fertig",
+            Status = "Ready",
             StatusColor = Colors.Green,
-            ErrorCountText = "3 Fehler erkannt"
+            ErrorCountText = "3 errors detected"
         });
 
         _analyses.Add(new AnalysisItem
         {
-            Title = "Blockbewegung",
+            Title = "Blocking",
             Date = "11.01.2026",
-            Status = "In Analyse",
+            Status = "In progress",
             StatusColor = Colors.Orange,
             ErrorCountText = "–"
         });
 
         _analyses.Add(new AnalysisItem
         {
-            Title = "Blockbewegung",
+            Title = "Blocking",
             Date = "11.01.2026",
-            Status = "In Analyse",
+            Status = "In progress",
             StatusColor = Colors.Orange,
             ErrorCountText = "–"
         });
 
         _analyses.Add(new AnalysisItem
         {
-            Title = "Blockbewegung",
+            Title = "Blocking",
             Date = "11.01.2026",
-            Status = "In Analyse",
+            Status = "In progress",
             StatusColor = Colors.Orange,
             ErrorCountText = "–"
         });
 
         _analyses.Add(new AnalysisItem
         {
-            Title = "Blockbewegung",
+            Title = "Blocking",
             Date = "11.01.2026",
-            Status = "In Analyse",
+            Status = "In progress",
             StatusColor = Colors.Orange,
             ErrorCountText = "–"
         });
 
         _analyses.Add(new AnalysisItem
         {
-            Title = "Blockbewegung",
+            Title = "Blocking",
             Date = "11.01.2026",
-            Status = "In Analyse",
+            Status = "In progress",
             StatusColor = Colors.Orange,
             ErrorCountText = "–"
         });
@@ -129,9 +129,9 @@ public partial class AnalysisPage : ContentPage
         {
             Title = "Ready Position",
             Date = "10.01.2026",
-            Status = "Fehlgeschlagen",
+            Status = "Failed",
             StatusColor = Colors.Red,
-            ErrorCountText = "Analyse nicht möglich"
+            ErrorCountText = "Analysis not possible"
         });
     }
 }
