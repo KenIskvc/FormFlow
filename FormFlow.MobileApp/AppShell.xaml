@@ -12,8 +12,8 @@
     <!--     Route="MainPage" /> -->
 
     <ShellContent
-        Title="Upload"
-        ContentTemplate="{DataTemplate local:UploadPage}"
-        Route="UploadPage" />
+        Title="Analysis"
+        ContentTemplate="{DataTemplate local:AnalysisPage}"
+        Route="AnalysisPage" />
 
 </Shell>
