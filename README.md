@@ -1,5 +1,6 @@
 # Manual
 
+### Database
 **Check connection from Host**
 
 ```cmd
