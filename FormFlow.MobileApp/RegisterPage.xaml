@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FormFlow.MobileApp.LoginPage"
-             Title="LoginPage">
+             x:Class="FormFlow.MobileApp.RegisterPage"
+             Title="RegisterPage">
     <ScrollView>
         <VerticalStackLayout
-        Padding="30,0"
-        Spacing="25">
-            <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-
-            <Label Text="Sign in"
+    Padding="30,0"
+    Spacing="25">
+            <Label Text="Create account"
                    FontSize="28"
                    FontAttributes="Bold" />
 
@@ -26,17 +21,22 @@
             <Entry x:Name="PasswordEntry"
                    IsPassword="True"
                    Placeholder="••••••••"
+                   ReturnType="Next" />
+
+            <Label Text="Confirm password" />
+            <Entry x:Name="ConfirmPasswordEntry"
+                   IsPassword="True"
+                   Placeholder="••••••••"
                    ReturnType="Go"
-                   Completed="OnLoginClicked" />
+                   Completed="OnRegisterClicked" />
 
-            <HorizontalStackLayout Spacing="10">
-                <CheckBox x:Name="RememberMeCheckBox" />
-                <Label Text="Remember me" VerticalTextAlignment="Center" />
-            </HorizontalStackLayout>
+            <Button x:Name="RegisterButton"
+                    Text="Register"
+                    Clicked="OnRegisterClicked" />
 
-            <Button x:Name="LoginButton"
-                    Text="Login"
-                    Clicked="OnLoginClicked" />
+            <Button Text="Back to Login"
+                    Clicked="OnBackToLoginClicked"
+                    BackgroundColor="Transparent" />
 
             <ActivityIndicator x:Name="BusyIndicator"
                                IsVisible="False"
@@ -45,7 +45,6 @@
             <Label x:Name="ErrorLabel"
                    TextColor="Red"
                    IsVisible="False" />
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
