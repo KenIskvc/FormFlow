@@ -1,0 +1,19 @@
+<ContentPage
+    x:Class="FormFlow.MobileApp.VideoManagementPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Videos">
+
+    <VerticalStackLayout Padding="20" Spacing="12">
+        <Label
+            Text="Video-Verwaltung"
+            FontSize="22"
+            FontAttributes="Bold" />
+
+        <Label
+            Text="Hier können Videos umbenannt, gelöscht oder neu analysiert werden."
+            FontSize="14"
+            TextColor="Gray" />
+    </VerticalStackLayout>
+
+</ContentPage>
