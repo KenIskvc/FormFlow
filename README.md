@@ -1,6 +1,8 @@
 # Manual
 
 ### Database
+It is necessary to activate the wireguard vpn interface before executing the next steps.
+
 **Check connection from Host**
 
 ```cmd
