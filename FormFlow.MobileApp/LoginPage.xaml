@@ -7,11 +7,6 @@
         <VerticalStackLayout
         Padding="30,0"
         Spacing="25">
-            <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-
             <Label Text="Sign in"
                    FontSize="28"
                    FontAttributes="Bold" />
@@ -38,14 +33,20 @@
                     Text="Login"
                     Clicked="OnLoginClicked" />
 
+            <Button Text="Register"
+                Clicked="OnRegisterClicked"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+
+            <Button Text="Continue as guest"
+                Clicked="OnContinueAsGuestClicked"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                FontAttributes="Italic" />
+
             <ActivityIndicator x:Name="BusyIndicator"
                                IsVisible="False"
                                IsRunning="False" />
-
-            <Label x:Name="ErrorLabel"
-                   TextColor="Red"
-                   IsVisible="False" />
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

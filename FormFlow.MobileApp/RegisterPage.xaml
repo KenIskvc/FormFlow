@@ -34,17 +34,10 @@
                     Text="Register"
                     Clicked="OnRegisterClicked" />
 
-            <Button Text="Back to Login"
-                    Clicked="OnBackToLoginClicked"
-                    BackgroundColor="Transparent" />
-
             <ActivityIndicator x:Name="BusyIndicator"
                                IsVisible="False"
                                IsRunning="False" />
 
-            <Label x:Name="ErrorLabel"
-                   TextColor="Red"
-                   IsVisible="False" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

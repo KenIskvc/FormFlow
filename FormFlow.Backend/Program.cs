@@ -13,7 +13,14 @@ builder.Services.AddDbContext<FormFlowDbContext>(options =>
 builder.Services.AddIdentityCore<IdentityUser>()
        .AddEntityFrameworkStores<FormFlowDbContext>()
        .AddApiEndpoints();
-
+builder.Services.Configure<IdentityOptions>(options => {
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+});
 // Token auth for mobile/API clients
 builder.Services.AddAuthentication()
        .AddBearerToken(IdentityConstants.BearerScheme);
@@ -29,7 +36,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment()) {
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
