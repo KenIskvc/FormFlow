@@ -4,16 +4,35 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FormFlow.MobileApp"
-    Title="FormFlow.MobileApp">
-
-    <!-- <ShellContent -->
-    <!--     Title="Home" -->
-    <!--     ContentTemplate="{DataTemplate local:MainPage}" -->
-    <!--     Route="MainPage" /> -->
-
+    Title="FormFlow">
     <ShellContent
-        Title="Analysis"
-        ContentTemplate="{DataTemplate local:LoginPage}"
-        Route="LoginPage" />
+    Title="Analysis"
+    ContentTemplate="{DataTemplate local:LoginPage}"
+    Route="LoginPage" />
+    <TabBar>
+        <!-- Start -->
+        <ShellContent
+            Title="Start"
+            Route="MainPage"
+            ContentTemplate="{DataTemplate local:MainPage}" />
+
+        <!-- Upload -->
+        <ShellContent
+            Title="Upload"
+            Route="UploadPage"
+            ContentTemplate="{DataTemplate local:UploadPage}" />
+
+        <!-- Analysen -->
+        <ShellContent
+            Title="Analysen"
+            Route="AnalysisPage"
+            ContentTemplate="{DataTemplate local:AnalysisPage}" />
+
+        <!-- Video Management -->
+        <ShellContent
+            Title="Videos"
+            Route="VideoManagementPage"
+            ContentTemplate="{DataTemplate local:VideoManagementPage}" />
+    </TabBar>
 
 </Shell>
