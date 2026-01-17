@@ -14,6 +14,7 @@ builder.Services.AddDbContext<FormFlowDbContext>(options =>
 builder.Services.AddIdentityCore<FormFlowUser>()
        .AddEntityFrameworkStores<FormFlowDbContext>()
        .AddApiEndpoints();
+
 builder.Services.Configure<IdentityOptions>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
