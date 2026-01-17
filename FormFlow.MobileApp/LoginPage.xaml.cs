@@ -39,7 +39,7 @@ public partial class LoginPage : ContentPage {
             }
 
             await DisplayAlert("Success", "You are logged in.", "OK");
-            await Shell.Current.GoToAsync(nameof(MainPage));
+            await Shell.Current.GoToAsync("//App/MainPage");
 
         } finally {
             SetBusy(false);
@@ -50,7 +50,7 @@ public partial class LoginPage : ContentPage {
 
     private async void OnContinueAsGuestClicked(object? sender, EventArgs e) {
         await _tokenStore.ClearAsync();
-        await Shell.Current.GoToAsync(nameof(MainPage));
+        await Shell.Current.GoToAsync("//App/MainPage");
     }
     private void SetBusy(bool isBusy) {
         LoginButton.IsEnabled = !isBusy;

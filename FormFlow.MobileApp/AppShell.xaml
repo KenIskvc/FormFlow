@@ -7,10 +7,11 @@
     Title="FormFlow.MobileApp">
     
     <ShellContent
-    Title="Analysis"
+    Title="Login"
     ContentTemplate="{DataTemplate local:LoginPage}"
     Route="LoginPage" />
-    <TabBar>
+    
+    <TabBar Route="App">
         <!-- Start -->
         <ShellContent
             Title="Start"
