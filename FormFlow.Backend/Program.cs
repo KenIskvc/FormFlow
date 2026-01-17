@@ -1,4 +1,5 @@
 using FormFlow.Backend.Data;
+using FormFlow.Backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ builder.Services.AddDbContext<FormFlowDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity (no UI) + API endpoints
-builder.Services.AddIdentityCore<IdentityUser>()
+builder.Services.AddIdentityCore<FormFlowUser>()
        .AddEntityFrameworkStores<FormFlowDbContext>()
        .AddApiEndpoints();
 
@@ -29,7 +30,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment()) {
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -40,7 +41,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<FormFlowUser>();
 
 app.MapControllers();
 
