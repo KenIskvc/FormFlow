@@ -31,20 +31,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Label Text="Actions" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0" />
-
-            <Button Text="Upload New Video" 
-                    Clicked="OnUploadClicked" 
-                    BackgroundColor="#2196F3" />
-
-            <Button Text="View Analysis Reports" 
-                    Clicked="OnAnalysesClicked" 
-                    BackgroundColor="#2196F3" />
-
-            <Button Text="Video Management" 
-                    Clicked="OnManagementClicked" 
-                    BackgroundColor="#2196F3" />
-
         </VerticalStackLayout>
     </ScrollView>
 
