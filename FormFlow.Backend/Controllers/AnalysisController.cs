@@ -80,6 +80,20 @@ public class AnalysisController : ControllerBase {
 
             return await response.Content.ReadAsStringAsync(ct);
         }
+
+        EXAMPLE WITH FILEPICKER:
+
+
+        var result = await FilePicker.Default.PickAsync(
+        new PickOptions
+        {
+            PickerTitle = "Select video"
+        });
+
+        if (result != null)
+        {
+            var reportJson = await AnalyzeAsync(result.FullPath, ct);
+        }
      */
     [AllowAnonymous]
     [HttpPost("/analyze")]
