@@ -1,5 +1,7 @@
+using FormFlow.Backend.Contracts;
 using FormFlow.Backend.Data;
 using FormFlow.Backend.Models;
+using FormFlow.Backend.Repositories;
 using FormFlow.Backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,11 +41,10 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<PoseAnalysisService>();
-
+builder.Services.AddScoped<IPoseAnalysisServicecs, PoseAnalysisService>();
+builder.Services.AddScoped<IAnalysisRepository, AnalysisRepository>();
+builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -52,7 +53,6 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

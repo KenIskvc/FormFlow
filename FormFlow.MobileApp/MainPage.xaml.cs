@@ -2,8 +2,11 @@
 
 namespace FormFlow.MobileApp;
 public partial class MainPage : ContentPage {
-
-    public MainPage() => InitializeComponent();
+    private readonly HttpClient _client;
+    public MainPage(HttpClient client) {
+        InitializeComponent();
+        _client = client;
+    }
 
     // private void OnCounterClicked(object? sender, EventArgs e)
     // {
@@ -27,6 +30,8 @@ public partial class MainPage : ContentPage {
         SemanticScreenReader.Announce(CounterBtn.Text);*/
     }
 
+
+    //AB HIER BITTE ALLES LÖSCHEN VOR LETZTEM COMMIT
     protected override async void OnAppearing() {
         base.OnAppearing();
         await RefreshTokenInfoAsync();
@@ -56,5 +61,24 @@ public partial class MainPage : ContentPage {
         }
 
         TokenInfoEditor.Text = sb.ToString();
+    }
+
+    private async void OnTestAuthMeClicked(object? sender, EventArgs e) {
+        try {
+            AuthTestResultLabel.Text = "Calling /auth/me ...";
+
+            var resp = await _client.GetAsync("api/Auth/me");
+
+            if (!resp.IsSuccessStatusCode) {
+                AuthTestResultLabel.Text =
+                    $"ERROR: {(int)resp.StatusCode} {resp.ReasonPhrase}";
+                return;
+            }
+
+            var username = await resp.Content.ReadAsStringAsync();
+            AuthTestResultLabel.Text = $"Backend says user = {username}";
+        } catch (Exception ex) {
+            AuthTestResultLabel.Text = $"Exception: {ex.Message}";
+        }
     }
 }
