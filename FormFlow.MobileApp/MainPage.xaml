@@ -24,18 +24,44 @@
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Your personal AI coach to improve your volleyball skills." />
 
-            <!-- <Button -->
-            <!--     x:Name="CounterBtn" -->
-            <!--     Text="Click me"  -->
-            <!--     SemanticProperties.Hint="Counts the number of times you click" -->
-            <!--     Clicked="OnCounterClicked" -->
-            <!--     HorizontalOptions="Fill" /> -->
-
             <Button
                 x:Name="UploadVideoNavBtn"
                 Text="Upload Video Navigation Button"
                 Clicked="NavigateToUpload"
                 HorizontalOptions="Fill" />
+
+            <!--AB HIER BITTE ALLES LÖSCHEN VOR LETZTEM COMMIT!-->
+            <Frame Padding="12" CornerRadius="12" BorderColor="LightGray">
+                <VerticalStackLayout Spacing="8">
+
+                    <Label Text="Token info (debug)"
+               FontAttributes="Bold" />
+
+                    <Editor x:Name="TokenInfoEditor"
+                IsReadOnly="True"
+                AutoSize="TextChanges"
+                HeightRequest="140"
+                Placeholder="No token info loaded." />
+
+                    <Button Text="Refresh token info"
+                Clicked="OnRefreshTokenInfoClicked" />
+                </VerticalStackLayout>
+            </Frame>
+            <Frame Padding="12" CornerRadius="12" BorderColor="LightGray">
+                <VerticalStackLayout Spacing="8">
+
+                    <Label Text="Auth test (debug)"
+               FontAttributes="Bold" />
+
+                    <Button Text="Test /auth/me"
+                Clicked="OnTestAuthMeClicked" />
+
+                    <Label x:Name="AuthTestResultLabel"
+               Text="No result yet."
+               LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+            <!--BIS HIER-->
         </VerticalStackLayout>
     </ScrollView>
 

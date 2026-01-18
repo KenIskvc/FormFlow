@@ -5,15 +5,36 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FormFlow.MobileApp"
     Title="FormFlow.MobileApp">
-
-    <!-- <ShellContent -->
-    <!--     Title="Home" -->
-    <!--     ContentTemplate="{DataTemplate local:MainPage}" -->
-    <!--     Route="MainPage" /> -->
-
+    
     <ShellContent
-        Title="Upload"
-        ContentTemplate="{DataTemplate local:UploadPage}"
-        Route="UploadPage" />
+    Title="Login"
+    ContentTemplate="{DataTemplate local:LoginPage}"
+    Route="LoginPage" />
+    
+    <TabBar Route="App">
+        <!-- Start -->
+        <ShellContent
+            Title="Start"
+            Route="MainPage"
+            ContentTemplate="{DataTemplate local:MainPage}" />
 
+        <!-- Upload -->
+        <ShellContent
+            Title="Upload"
+            Route="UploadPage"
+            ContentTemplate="{DataTemplate local:UploadPage}" />
+
+        <!-- Analysen -->
+        <ShellContent
+            Title="Analysen"
+            Route="AnalysisPage"
+            ContentTemplate="{DataTemplate local:AnalysisPage}" />
+
+        <!-- Video Management -->
+        <ShellContent
+            Title="Videos"
+            Route="VideoManagementPage"
+            ContentTemplate="{DataTemplate local:VideoManagementPage}" />
+    </TabBar>
+    
 </Shell>
