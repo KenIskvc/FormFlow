@@ -1,65 +1,100 @@
-using System;
-using Microsoft.Maui.Media;
+using FormFlow.MobileApp.Services;
+using FormFlow.MobileApp.DTOs;
 
-namespace FormFlow.MobileApp
+namespace FormFlow.MobileApp;
+
+public partial class UploadPage : ContentPage
 {
-    public partial class UploadPage : ContentPage
+    private FileResult? _selectedVideo;
+    private readonly VideoService _videoService;
+    private readonly TokenStore _tokenStore;
+    private string _userToken = "";
+
+    public UploadPage()
     {
-        public UploadPage()
+        InitializeComponent();
+
+        _tokenStore = new TokenStore();
+
+        var httpClient = new HttpClient
         {
-            InitializeComponent();
-        }
+            BaseAddress = new Uri("https://localhost:7110/"),
+            Timeout = TimeSpan.FromMinutes(5)
+        };
 
-        private async void OnSelectVideoClicked(object sender, EventArgs e)
+        _videoService = new VideoService(httpClient);
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await CheckLoginStatusAsync();
+    }
+
+    private async Task CheckLoginStatusAsync()
+    {
+        _userToken = await _tokenStore.GetAccessTokenAsync() ?? "";
+        ActionButton.Text = string.IsNullOrEmpty(_userToken)
+            ? "Analyse starten (Gast)"
+            : "Upload & Analyse starten";
+    }
+
+    private async void OnSelectVideoClicked(object sender, EventArgs e)
+    {
+        try
         {
-            // Dein Teil: Das Auswahlfenster (FR-M07)
-            var choice = await DisplayActionSheet(
-                "Select video source",
-                "Cancel",
-                null,
-                "Choose from Gallery",
-                "Record with Camera");
-
-            if (choice == "Cancel" || string.IsNullOrEmpty(choice))
-                return;
-
-            // Logik für die Auswahl aus der Galerie (Muss-Kriterium FR-M01)
-            if (choice == "Choose from Gallery")
+            _selectedVideo = await MediaPicker.Default.PickVideoAsync();
+            if (_selectedVideo != null)
             {
-                await PickVideoFromGallery();
-            }
-            else if (choice == "Record with Camera")
-            {
-                await DisplayAlert("Camera", "Camera recording is not implemented yet.", "OK");
-            }
-        }
-
-        private async Task PickVideoFromGallery()
-        {
-            try
-            {
-                // Öffnet den Windows Explorer oder die Galerie (NFR-P01)
-                FileResult video = await MediaPicker.Default.PickVideoAsync();
-
-                if (video != null)
-                {
-                    // Erfolgreich ausgewählt (FR-M01)
-                    await DisplayAlert("Success", $"Selected: {video.FileName}", "OK");
-
-                    // Hier kann später die Analyse (FR-M02) starten
-                }
-            }
-            catch (Exception ex)
-            {
-                // NFR-R01: Fehler abfangen, damit die App stabil bleibt
-                await DisplayAlert("Error", $"Selection failed: {ex.Message}", "OK");
+                FileNameLabel.Text = $"Datei: {_selectedVideo.FileName}";
+                SelectedVideoArea.IsVisible = true;
             }
         }
-
-        // FR-M10: Zurück zur Startseite
-        private async void OnBackClicked(object sender, EventArgs e)
+        catch
         {
-            await Navigation.PopAsync();
+            await DisplayAlert("Fehler", "Video konnte nicht geladen werden.", "OK");
         }
+    }
+
+    private async void OnUploadAndAnalyzeClicked(object sender, EventArgs e)
+    {
+        if (_selectedVideo == null)
+            return;
+
+        try
+        {
+            SetLoading(true);
+
+            UploadResultDto result =
+                await _videoService.UploadAndAnalyzeAsync(
+                    _selectedVideo,
+                    _userToken,
+                    CancellationToken.None);
+
+            await DisplayAlert(
+                "Analyse abgeschlossen",
+                $"Analysezeitpunkt: {result.Analysis.CreatedAt}",
+                "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Upload-Fehler", ex.Message, "OK");
+        }
+        finally
+        {
+            SetLoading(false);
+        }
+    }
+
+    private void SetLoading(bool isLoading)
+    {
+        LoadingIndicator.IsRunning = isLoading;
+        ActionButton.IsEnabled = !isLoading;
+
+        ActionButton.Text = isLoading
+            ? "Verarbeite..."
+            : string.IsNullOrEmpty(_userToken)
+                ? "Analyse starten (Gast)"
+                : "Upload & Analyse starten";
     }
 }
