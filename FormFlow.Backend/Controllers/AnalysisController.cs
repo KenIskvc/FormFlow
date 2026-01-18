@@ -2,8 +2,11 @@
 using FormFlow.Backend.DTOs;
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
+using FormFlow.Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace FormFlow.Backend.Controllers;
 [Route("api/[controller]")]
@@ -52,15 +55,26 @@ public class AnalysisController : ControllerBase {
             );
         }
 
-        var analysis = new Analysis {
+        var errorCount = CountErrorsFromReport(reportAsJson);
+
+        var analysis = new Analysis
+        {
             VideoId = videoId,
             CreatedAt = DateTime.UtcNow,
-            Report = reportAsJson
+            Report = reportAsJson,
+            ErrorCount = errorCount
         };
 
         await _analysisRepository.AddAnalaysis(analysis);
 
-        return Ok(analysis);
+        return Ok(new AnalysisResponseDto
+        {
+            CreatedAt = analysis.CreatedAt,
+            AnalysisId = analysis.Id,
+            ErrorCount = analysis.ErrorCount,
+            Report = analysis.Report
+        });
+
     }
 
     /*
@@ -117,16 +131,65 @@ public class AnalysisController : ControllerBase {
         if (string.IsNullOrWhiteSpace(reportAsJson))
             return StatusCode(502, "Pose analysis returned no result.");
 
-        var analysis = new Analysis() {
+        var errorCount = CountErrorsFromReport(reportAsJson);
+
+        return Ok(new AnalysisResponseDto
+        {
             CreatedAt = DateTime.UtcNow,
+            AnalysisId = null,
+            ErrorCount = errorCount,
             Report = reportAsJson
-        };
-        return Ok(analysis);
+        });
+
         //or as simple json
         //return Ok(new {
         //create = DateTime.UtcNow,
         //report = reportAsJson
         //})
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<List<AnalysisResponseDto>>> GetMyAnalyses(
+        CancellationToken ct)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var analyses =
+            await _analysisRepository.GetAnalysesForUserAsync(userId, ct);
+
+        var result = analyses.Select(a => new AnalysisResponseDto
+        {
+            AnalysisId = a.Id,
+            CreatedAt = a.CreatedAt,
+            ErrorCount = a.ErrorCount,
+            Report = a.Report
+        }).ToList();
+
+        return Ok(result);
+    }
+
+    private static int CountErrorsFromReport(string reportJson)
+    {
+        if (string.IsNullOrWhiteSpace(reportJson))
+            return 0;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(reportJson);
+
+            if (doc.RootElement.TryGetProperty("technicalErrors", out var errors) &&
+                errors.ValueKind == JsonValueKind.Array)
+            {
+                return errors.GetArrayLength();
+            }
+        }
+        catch{}
+
+        return 0;
     }
 
 }

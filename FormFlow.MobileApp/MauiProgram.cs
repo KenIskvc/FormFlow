@@ -27,6 +27,8 @@ public static class MauiProgram {
 
         builder.Services.AddTransient(sp =>
             sp.GetRequiredService<IHttpClientFactory>().CreateClient("FormFlow.Backend"));
+        builder.Services.AddTransient<IAnalysisApi, AnalysisApi>();
+
 
         builder.Services.AddSingleton<IAuthService, AuthService>();
 
