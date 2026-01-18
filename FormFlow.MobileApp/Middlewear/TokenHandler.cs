@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace FormFlow.MobileApp.Middlewear;
 
-class TokenHandler : DelegatingHandler {
+public class TokenHandler : DelegatingHandler {
     private readonly ITokenStore _tokenStore;
 
     public TokenHandler(ITokenStore tokenStore) => _tokenStore = tokenStore;
