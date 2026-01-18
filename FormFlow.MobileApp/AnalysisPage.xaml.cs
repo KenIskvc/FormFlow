@@ -1,21 +1,53 @@
-using FormFlow.MobileApp.Models;
+using FormFlow.MobileApp.DTOs;
+using FormFlow.MobileApp.Contracts;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace FormFlow.MobileApp;
 
 public partial class AnalysisPage : ContentPage
 {
-    private readonly ObservableCollection<AnalysisItem> _analyses = new();
+    private readonly ObservableCollection<AnalysisListItem> _analyses = new();
 
-    public AnalysisPage()
+    private readonly ITokenStore _tokenStore;
+    private readonly IAnalysisApi _analysisApi;
+
+    public AnalysisPage(
+        ITokenStore tokenStore,
+        IAnalysisApi analysisApi)
     {
         InitializeComponent();
+        _tokenStore = tokenStore;
+        _analysisApi = analysisApi;
 
         AnalysisCollection.ItemsSource = _analyses;
-        LoadDummyAnalyses();
         AnalysisCollection.SelectionChanged += OnAnalysisSelected;
 
-        // WICHTIG: Grid-Layout sofort setzen (sonst bleibt es eine Liste!)
+        SetInitialLayout();
+    }
+
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        UpdateGridSpan();
+
+        var accessToken = await _tokenStore.GetAccessTokenAsync();
+        if (string.IsNullOrEmpty(accessToken))
+            return; 
+
+        _analyses.Clear();
+
+        var persistedAnalyses =
+            await _analysisApi.GetMyAnalysesAsync(CancellationToken.None);
+
+        foreach (var dto in persistedAnalyses)
+            AddAnalysisFromDto(dto);
+    }
+
+    private void SetInitialLayout()
+    {
         AnalysisCollection.ItemsLayout =
             new GridItemsLayout(4, ItemsLayoutOrientation.Vertical)
             {
@@ -24,10 +56,15 @@ public partial class AnalysisPage : ContentPage
             };
     }
 
-    protected override void OnAppearing()
+    public void AddAnalysisFromDto(AnalysisResponseDto dto)
     {
-        base.OnAppearing();
-        UpdateGridSpan();
+        _analyses.Insert(0, new AnalysisListItem
+        {
+            AnalysisId = dto.AnalysisId,
+            CreatedAt = dto.CreatedAt,
+            ErrorCount = dto.ErrorCount,
+            Report = dto.Report
+        });
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -55,83 +92,70 @@ public partial class AnalysisPage : ContentPage
 
     private async void OnAnalysisSelected(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is not AnalysisItem selected)
+        if (e.CurrentSelection.FirstOrDefault() is not AnalysisListItem selected)
             return;
 
-        await DisplayAlert(
-            "Analyse öffnen",
-            $"Analyse: {selected.Title}",
-            "OK"
-        );
+        string action = await DisplayActionSheet(
+            "Analysis",
+            "Cancel",
+            null,
+            "Open",
+            "Download PDF",
+            "Delete");
+
+        switch (action)
+        {
+            case "Open":
+                OpenAnalysis(selected);
+                break;
+
+            case "Download PDF":
+                await DownloadPdfAsync(selected);
+                break;
+
+            case "Delete":
+                DeleteAnalysis(selected);
+                break;
+        }
 
         ((CollectionView)sender).SelectedItem = null;
     }
 
-    private void LoadDummyAnalyses()
+    private void DeleteAnalysis(AnalysisListItem item)
     {
-        _analyses.Clear();
-
-        _analyses.Add(new AnalysisItem
+        // Session-Analyse
+        if (!item.IsPersisted)
         {
-            Title = "Jump serve",
-            Date = "12.01.2026",
-            Status = "Ready",
-            StatusColor = Colors.Green,
-            ErrorCountText = "3 errors detected"
-        });
+            _analyses.Remove(item);
+            return;
+        }
 
-        _analyses.Add(new AnalysisItem
-        {
-            Title = "Blocking",
-            Date = "11.01.2026",
-            Status = "In progress",
-            StatusColor = Colors.Orange,
-            ErrorCountText = "–"
-        });
+        // Persistierte Analyse
+        // später:
+        // await Api.DeleteAnalysis(item.AnalysisId.Value);
 
-        _analyses.Add(new AnalysisItem
-        {
-            Title = "Blocking",
-            Date = "11.01.2026",
-            Status = "In progress",
-            StatusColor = Colors.Orange,
-            ErrorCountText = "–"
-        });
-
-        _analyses.Add(new AnalysisItem
-        {
-            Title = "Blocking",
-            Date = "11.01.2026",
-            Status = "In progress",
-            StatusColor = Colors.Orange,
-            ErrorCountText = "–"
-        });
-
-        _analyses.Add(new AnalysisItem
-        {
-            Title = "Blocking",
-            Date = "11.01.2026",
-            Status = "In progress",
-            StatusColor = Colors.Orange,
-            ErrorCountText = "–"
-        });
-
-        _analyses.Add(new AnalysisItem
-        {
-            Title = "Blocking",
-            Date = "11.01.2026",
-            Status = "In progress",
-            StatusColor = Colors.Orange,
-            ErrorCountText = "–"
-        });
-
-        _analyses.Add(new AnalysisItem
-        {
-            Title = "Ready Position",
-            Date = "10.01.2026",
-            Status = "Failed",
-            StatusColor = Colors.Red,
-            ErrorCountText = "Analysis not possible"
-        });
+        _analyses.Remove(item);
     }
+
+    private async Task DownloadPdfAsync(AnalysisListItem item)
+    {
+        // später:
+        // var pdfBytes = await Api.GetAnalysisPdf(item.AnalysisId);
+
+        await DisplayAlert(
+            "Download",
+            "PDF download will be implemented here.",
+            "OK");
+    }
+
+    private async void OpenAnalysis(AnalysisListItem item)
+    {
+        // Später: eigene Detail-Page
+        await DisplayAlert(
+            "Analysis details",
+            item.Report,
+            "OK"
+        );
+    }
+
 }

@@ -2,7 +2,11 @@
 
 namespace FormFlow.Backend.Repositories;
 
-public interface IAnalysisRepository {
+public interface IAnalysisRepository
+{
+    Task AddAnalaysis(Analysis analysis);
 
-    public Task AddAnalaysis(Analysis analysis);
+    Task<List<Analysis>> GetAnalysesForUserAsync(
+        string userId,
+        CancellationToken ct);
 }
