@@ -1,4 +1,5 @@
 ﻿using FormFlow.Backend.Contracts;
+using FormFlow.Backend.DTOs;
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,11 @@ public class AnalysisController : ControllerBase {
         _analysisRepository = analysisRepository;
     }
 
+    [Authorize]
     [HttpPost("/analyze/{videoId}")]
+
     public async Task<IActionResult> AnalyzeVideo([FromRoute] int videoId, CancellationToken ct) {
+
         var video = await _videoRepository.GetVideoAsync(videoId);
 
         if (video == null)
@@ -98,7 +102,9 @@ public class AnalysisController : ControllerBase {
     [AllowAnonymous]
     [HttpPost("/analyze")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> AnalyzeUpload([FromForm] IFormFile file, CancellationToken ct) {
+    public async Task<IActionResult> AnalyzeUpload([FromForm] UploadRequest request, CancellationToken ct) {
+        var file = request.File;
+
         if (file == null || file.Length == 0)
             return BadRequest("No file uploaded.");
 
