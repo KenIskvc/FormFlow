@@ -1,6 +1,7 @@
 ﻿using FormFlow.Backend.Contracts;
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FormFlow.Backend.Controllers;
@@ -56,6 +57,70 @@ public class AnalysisController : ControllerBase {
         await _analysisRepository.AddAnalaysis(analysis);
 
         return Ok(analysis);
+    }
+
+    /*
+     * This is how a possible call from the frontend could look like:
+        public async Task<string> AnalyzeAsync(
+        string filePath,
+        CancellationToken ct)
+        {
+            using var content = new MultipartFormDataContent();
+
+            await using var stream = File.OpenRead(filePath);
+
+            var fileContent = new StreamContent(stream);
+            fileContent.Headers.ContentType =
+                new System.Net.Http.Headers.MediaTypeHeaderValue("video/mp4");
+
+            content.Add(fileContent, "file", Path.GetFileName(filePath));
+
+            using var response = await _client.PostAsync("/analyze", content, ct);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsStringAsync(ct);
+        }
+
+        EXAMPLE WITH FILEPICKER:
+
+
+        var result = await FilePicker.Default.PickAsync(
+        new PickOptions
+        {
+            PickerTitle = "Select video"
+        });
+
+        if (result != null)
+        {
+            var reportJson = await AnalyzeAsync(result.FullPath, ct);
+        }
+     */
+    [AllowAnonymous]
+    [HttpPost("/analyze")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> AnalyzeUpload([FromForm] IFormFile file, CancellationToken ct) {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        await using var ms = new MemoryStream();
+        await file.CopyToAsync(ms);
+        var bytes = ms.ToArray();
+
+        var reportAsJson = await _analaysisService.AnalyzeAsync(bytes, file.FileName, ct);
+
+        if (string.IsNullOrWhiteSpace(reportAsJson))
+            return StatusCode(502, "Pose analysis returned no result.");
+
+        var analysis = new Analysis() {
+            CreatedAt = DateTime.UtcNow,
+            Report = reportAsJson
+        };
+        return Ok(analysis);
+        //or as simple json
+        //return Ok(new {
+        //create = DateTime.UtcNow,
+        //report = reportAsJson
+        //})
     }
 
 }
