@@ -30,6 +30,7 @@
                 Clicked="NavigateToUpload"
                 HorizontalOptions="Fill" />
 
+            <!--AB HIER BITTE ALLES LÖSCHEN VOR LETZTEM COMMIT!-->
             <Frame Padding="12" CornerRadius="12" BorderColor="LightGray">
                 <VerticalStackLayout Spacing="8">
 
@@ -60,6 +61,7 @@
                LineBreakMode="WordWrap" />
                 </VerticalStackLayout>
             </Frame>
+            <!--BIS HIER-->
         </VerticalStackLayout>
     </ScrollView>
 

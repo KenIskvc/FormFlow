@@ -30,6 +30,8 @@ public partial class MainPage : ContentPage {
         SemanticScreenReader.Announce(CounterBtn.Text);*/
     }
 
+
+    //AB HIER BITTE ALLES LÖSCHEN VOR LETZTEM COMMIT
     protected override async void OnAppearing() {
         base.OnAppearing();
         await RefreshTokenInfoAsync();
@@ -65,7 +67,7 @@ public partial class MainPage : ContentPage {
         try {
             AuthTestResultLabel.Text = "Calling /auth/me ...";
 
-            var resp = await _client.GetAsync("/auth/me");
+            var resp = await _client.GetAsync("api/Auth/me");
 
             if (!resp.IsSuccessStatusCode) {
                 AuthTestResultLabel.Text =
