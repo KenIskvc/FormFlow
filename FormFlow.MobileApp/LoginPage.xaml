@@ -3,12 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FormFlow.MobileApp.LoginPage"
              Title="LoginPage">
-    <VerticalStackLayout
+    <ScrollView>
+        <VerticalStackLayout
         Padding="30,0"
         Spacing="25">
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+            <Label Text="Sign in"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Label Text="Email" />
+            <Entry x:Name="EmailEntry"
+                   Keyboard="Email"
+                   Placeholder="you@example.com"
+                   ReturnType="Next" />
+
+            <Label Text="Password" />
+            <Entry x:Name="PasswordEntry"
+                   IsPassword="True"
+                   Placeholder="••••••••"
+                   ReturnType="Go"
+                   Completed="OnLoginClicked" />
+
+            <HorizontalStackLayout Spacing="10">
+                <CheckBox x:Name="RememberMeCheckBox" />
+                <Label Text="Remember me" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+
+            <Button x:Name="LoginButton"
+                    Text="Login"
+                    Clicked="OnLoginClicked" />
+
+            <Button Text="Register"
+                Clicked="OnRegisterClicked"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+
+            <Button Text="Continue as guest"
+                Clicked="OnContinueAsGuestClicked"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                FontAttributes="Italic" />
+
+            <ActivityIndicator x:Name="BusyIndicator"
+                               IsVisible="False"
+                               IsRunning="False" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

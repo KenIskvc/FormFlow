@@ -1,30 +1,60 @@
-﻿namespace FormFlow.MobileApp {
-    public partial class MainPage : ContentPage {
+﻿using System.Text;
 
-        public MainPage() {
-            InitializeComponent();
+namespace FormFlow.MobileApp;
+public partial class MainPage : ContentPage {
+
+    public MainPage() => InitializeComponent();
+
+    // private void OnCounterClicked(object? sender, EventArgs e)
+    // {
+    //     count++;
+    //
+    //     if (count == 1)
+    //         CounterBtn.Text = $"Clicked {count} time";
+    //     else
+    //         CounterBtn.Text = $"Clicked {count} times";
+    //
+    //     SemanticScreenReader.Announce(CounterBtn.Text);
+    // }
+
+    private void NavigateToUpload(object? sender, EventArgs e) {
+
+        /*if(count == 1)
+            CounterBtn.Text = $"Clicked {count} time";
+        else
+            CounterBtn.Text = $"Clicked {count} times";
+
+        SemanticScreenReader.Announce(CounterBtn.Text);*/
+    }
+
+    protected override async void OnAppearing() {
+        base.OnAppearing();
+        await RefreshTokenInfoAsync();
+    }
+
+    private async void OnRefreshTokenInfoClicked(object? sender, EventArgs e) => await RefreshTokenInfoAsync();
+
+    private async Task RefreshTokenInfoAsync() {
+        // Match the keys you used in your TokenStore
+        var access = await SecureStorage.GetAsync("access_token");
+        var refresh = await SecureStorage.GetAsync("refresh_token");
+        var tokenType = await SecureStorage.GetAsync("token_type");
+        var expiresAtRaw = await SecureStorage.GetAsync("access_expires_at_utc");
+
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"Access token: {(string.IsNullOrWhiteSpace(access) ? "NOT SET" : "PRESENT")}");
+        sb.AppendLine($"Refresh token: {(string.IsNullOrWhiteSpace(refresh) ? "NOT SET" : "PRESENT")}");
+        sb.AppendLine($"Token type: {(!string.IsNullOrWhiteSpace(tokenType) ? tokenType : "(not stored)")}");
+
+        if (DateTime.TryParse(expiresAtRaw, null, System.Globalization.DateTimeStyles.RoundtripKind, out var expiresAtUtc)) {
+            var remaining = expiresAtUtc - DateTime.UtcNow;
+            sb.AppendLine($"Expires at (UTC): {expiresAtUtc:O}");
+            sb.AppendLine($"Expires in: {(remaining.TotalSeconds <= 0 ? "EXPIRED" : $"{(int)remaining.TotalMinutes} min")}");
+        } else {
+            sb.AppendLine("Expires at (UTC): (not stored)");
         }
 
-        // private void OnCounterClicked(object? sender, EventArgs e)
-        // {
-        //     count++;
-        //
-        //     if (count == 1)
-        //         CounterBtn.Text = $"Clicked {count} time";
-        //     else
-        //         CounterBtn.Text = $"Clicked {count} times";
-        //
-        //     SemanticScreenReader.Announce(CounterBtn.Text);
-        // }
-
-        private void NavigateToUpload(object? sender, EventArgs e) {
-
-            /*if(count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);*/
-        }
+        TokenInfoEditor.Text = sb.ToString();
     }
 }

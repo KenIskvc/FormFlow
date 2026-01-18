@@ -15,6 +15,23 @@ builder.Services.AddIdentityCore<FormFlowUser>()
        .AddEntityFrameworkStores<FormFlowDbContext>()
        .AddApiEndpoints();
 
+builder.Services.AddHttpClient("PoseDetectionClient", client => {
+    client.BaseAddress = new Uri("http://10.123.177.51:8000");
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
+
+builder.Services.AddTransient(sp =>
+    sp.GetRequiredService<IHttpClientFactory>()
+      .CreateClient("PoseDetectionClient"));
+
+builder.Services.Configure<IdentityOptions>(options => {
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+});
 // Token auth for mobile/API clients
 builder.Services.AddAuthentication()
        .AddBearerToken(IdentityConstants.BearerScheme);
