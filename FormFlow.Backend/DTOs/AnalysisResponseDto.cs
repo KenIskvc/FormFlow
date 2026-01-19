@@ -9,8 +9,6 @@ public class AnalysisResponseDto
 
     public bool IsPersisted => AnalysisId.HasValue;
 
-    public int ErrorCount { get; set; }
-
     // Das eigentliche Analyse-Ergebnis
     public string Report { get; set; } = default!;
 }

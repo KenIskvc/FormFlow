@@ -55,14 +55,11 @@ public class AnalysisController : ControllerBase {
             );
         }
 
-        var errorCount = CountErrorsFromReport(reportAsJson);
-
         var analysis = new Analysis
         {
             VideoId = videoId,
             CreatedAt = DateTime.UtcNow,
             Report = reportAsJson,
-            ErrorCount = errorCount
         };
 
         await _analysisRepository.AddAnalaysis(analysis);
@@ -71,7 +68,6 @@ public class AnalysisController : ControllerBase {
         {
             CreatedAt = analysis.CreatedAt,
             AnalysisId = analysis.Id,
-            ErrorCount = analysis.ErrorCount,
             Report = analysis.Report
         });
 
@@ -131,13 +127,11 @@ public class AnalysisController : ControllerBase {
         if (string.IsNullOrWhiteSpace(reportAsJson))
             return StatusCode(502, "Pose analysis returned no result.");
 
-        var errorCount = CountErrorsFromReport(reportAsJson);
 
         return Ok(new AnalysisResponseDto
         {
             CreatedAt = DateTime.UtcNow,
             AnalysisId = null,
-            ErrorCount = errorCount,
             Report = reportAsJson
         });
 
@@ -165,31 +159,10 @@ public class AnalysisController : ControllerBase {
         {
             AnalysisId = a.Id,
             CreatedAt = a.CreatedAt,
-            ErrorCount = a.ErrorCount,
             Report = a.Report
         }).ToList();
 
         return Ok(result);
-    }
-
-    private static int CountErrorsFromReport(string reportJson)
-    {
-        if (string.IsNullOrWhiteSpace(reportJson))
-            return 0;
-
-        try
-        {
-            using var doc = JsonDocument.Parse(reportJson);
-
-            if (doc.RootElement.TryGetProperty("technicalErrors", out var errors) &&
-                errors.ValueKind == JsonValueKind.Array)
-            {
-                return errors.GetArrayLength();
-            }
-        }
-        catch{}
-
-        return 0;
     }
 
 }
