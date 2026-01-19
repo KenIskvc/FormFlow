@@ -42,12 +42,12 @@
                                 Spacing="6">
 
                                 <Button
-                                    Text="Rename✏️"
+                                    Text="Rename"
                                     CommandParameter="{Binding .}"
                                     Clicked="OnRenameClicked" />
 
                                 <Button
-                                    Text="Re-analyze🔁"
+                                    Text="Re-analyze"
                                     CommandParameter="{Binding .}"
                                     Clicked="OnReAnalyzeClicked" />
 
