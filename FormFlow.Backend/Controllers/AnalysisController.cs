@@ -16,6 +16,7 @@ public class AnalysisController : ControllerBase {
     private readonly IPoseAnalysisServicecs _analaysisService;
     private readonly IVideoRepository _videoRepository;
     private readonly IAnalysisRepository _analysisRepository;
+    private const string AdminUserId = "c511f47d-a428-48e9-a942-48c090b9af04";
 
     public AnalysisController(IPoseAnalysisServicecs analaysisService, IVideoRepository videoRepository, IAnalysisRepository analysisRepository) {
         _analaysisService = analaysisService;
@@ -157,8 +158,17 @@ public class AnalysisController : ControllerBase {
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        var analyses =
-            await _analysisRepository.GetAnalysesForUserAsync(userId, ct);
+        List<Analysis> analyses;
+
+        if (userId == AdminUserId)
+        {
+            analyses = await _analysisRepository.GetAllAnalysesAsync(ct);
+        }
+        // 👤 NORMALER USER: nur eigene
+        else
+        {
+            analyses = await _analysisRepository.GetAnalysesForUserAsync(userId, ct);
+        }
 
         var result = analyses.Select(a => new AnalysisResponseDto
         {

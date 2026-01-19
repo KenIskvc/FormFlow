@@ -10,7 +10,6 @@ namespace FormFlow.MobileApp.DTOs
     {
         public DateTime CreatedAt { get; set; }
         public int? AnalysisId { get; set; }
-        public bool IsPersisted { get; set; }
         public int ErrorCount { get; set; }
         public string Report { get; set; } = string.Empty;
     }

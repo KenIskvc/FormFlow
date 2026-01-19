@@ -31,4 +31,13 @@ public class AnalysisRepository : IAnalysisRepository
             .OrderByDescending(a => a.CreatedAt)
             .ToListAsync(ct);
     }
+
+    public async Task<List<Analysis>> GetAllAnalysesAsync(CancellationToken ct)
+    {
+        return await _context.Analyses
+            .Include(a => a.Video)
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync(ct);
+    }
+
 }

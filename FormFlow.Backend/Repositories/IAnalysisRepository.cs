@@ -9,4 +9,7 @@ public interface IAnalysisRepository
     Task<List<Analysis>> GetAnalysesForUserAsync(
         string userId,
         CancellationToken ct);
+
+    Task<List<Analysis>> GetAllAnalysesAsync(CancellationToken ct);
+
 }
