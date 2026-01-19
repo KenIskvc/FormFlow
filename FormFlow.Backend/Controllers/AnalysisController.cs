@@ -62,7 +62,6 @@ public class AnalysisController : ControllerBase {
             VideoId = videoId,
             CreatedAt = DateTime.UtcNow,
             Report = reportAsJson,
-            ErrorCount = errorCount
         };
 
         await _analysisRepository.AddAnalaysis(analysis);
@@ -71,7 +70,7 @@ public class AnalysisController : ControllerBase {
         {
             CreatedAt = analysis.CreatedAt,
             AnalysisId = analysis.Id,
-            ErrorCount = analysis.ErrorCount,
+            ErrorCount = errorCount,
             Report = analysis.Report
         });
 
@@ -165,7 +164,7 @@ public class AnalysisController : ControllerBase {
         {
             AnalysisId = a.Id,
             CreatedAt = a.CreatedAt,
-            ErrorCount = a.ErrorCount,
+            ErrorCount = CountErrorsFromReport(a.Report),
             Report = a.Report
         }).ToList();
 
