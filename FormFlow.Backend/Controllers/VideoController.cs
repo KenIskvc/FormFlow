@@ -2,7 +2,6 @@
 using FormFlow.Backend.DTOs;
 using FormFlow.Backend.Models;
 using FormFlow.Backend.Repositories;
-using FormFlow.Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,8 +10,7 @@ namespace FormFlow.Backend.Controllers;
 
 [ApiController]
 [Route("api/video")]
-public class VideoController : ControllerBase
-{
+public class VideoController : ControllerBase {
     private readonly IVideoRepository _videoRepository;
     private readonly IAnalysisRepository _analysisRepository;
     private readonly IPoseAnalysisServicecs _poseService;
@@ -22,12 +20,17 @@ public class VideoController : ControllerBase
         IVideoRepository videoRepository,
         IAnalysisRepository analysisRepository,
         IPoseAnalysisServicecs poseService,
-        UserManager<FormFlowUser> userManager)
-    {
+        UserManager<FormFlowUser> userManager) {
         _videoRepository = videoRepository;
         _analysisRepository = analysisRepository;
         _poseService = poseService;
         _userManager = userManager;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetVideos(CancellationToken ct) {
+        var videos = await _videoRepository.GetAll();
+        return Ok(videos);
     }
 
     // =========================
@@ -36,8 +39,7 @@ public class VideoController : ControllerBase
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(
         [FromForm] UploadRequest request,
-        CancellationToken ct)
-    {
+        CancellationToken ct) {
         if (request.File == null || request.File.Length == 0)
             return BadRequest("No file uploaded.");
 
@@ -45,8 +47,7 @@ public class VideoController : ControllerBase
         // Video in Bytes lesen
         // -------------------------
         byte[] videoBytes;
-        using (var ms = new MemoryStream())
-        {
+        using (var ms = new MemoryStream()) {
             await request.File.CopyToAsync(ms, ct);
             videoBytes = ms.ToArray();
         }
@@ -63,14 +64,12 @@ public class VideoController : ControllerBase
         // -------------------------
         // Eingeloggt → speichern
         // -------------------------
-        if (User.Identity?.IsAuthenticated == true)
-        {
+        if (User.Identity?.IsAuthenticated == true) {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return Unauthorized();
 
-            var video = new Video
-            {
+            var video = new Video {
                 FileName = request.File.FileName,
                 FileData = videoBytes,
                 UserId = user.Id
@@ -78,8 +77,7 @@ public class VideoController : ControllerBase
 
             await _videoRepository.AddVideoAsync(video);
 
-            var analysis = new Analysis
-            {
+            var analysis = new Analysis {
                 VideoId = video.Id,
                 CreatedAt = DateTime.UtcNow,
                 Report = reportJson
@@ -87,11 +85,9 @@ public class VideoController : ControllerBase
 
             await _analysisRepository.AddAnalaysis(analysis);
 
-            return Ok(new UploadResponseDto
-            {
+            return Ok(new UploadResponseDto {
                 VideoId = video.Id,
-                Analysis = new AnalysisDto
-                {
+                Analysis = new AnalysisDto {
                     CreatedAt = analysis.CreatedAt,
                     Report = analysis.Report
                 }
@@ -102,10 +98,8 @@ public class VideoController : ControllerBase
         // -------------------------
         // Gast → nur Analyse zurück
         // -------------------------
-        return Ok(new UploadResponseDto
-        {
-            Analysis = new AnalysisDto
-            {
+        return Ok(new UploadResponseDto {
+            Analysis = new AnalysisDto {
                 CreatedAt = DateTime.UtcNow,
                 Report = reportJson
             }
@@ -117,8 +111,7 @@ public class VideoController : ControllerBase
     // =========================
     [Authorize]
     [HttpPut("rename/{id:int}")]
-    public async Task<IActionResult> Rename(int id, [FromBody] string newName)
-    {
+    public async Task<IActionResult> Rename(int id, [FromBody] string newName) {
         if (string.IsNullOrWhiteSpace(newName))
             return BadRequest("Invalid name.");
 
@@ -141,8 +134,7 @@ public class VideoController : ControllerBase
     // =========================
     [Authorize]
     [HttpDelete("delete/{id:int}")]
-    public async Task<IActionResult> Delete(int id)
-    {
+    public async Task<IActionResult> Delete(int id) {
         var video = await _videoRepository.GetVideoAsync(id);
         if (video == null)
             return NotFound();
