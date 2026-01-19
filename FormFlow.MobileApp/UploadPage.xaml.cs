@@ -94,7 +94,7 @@ public partial class UploadPage : ContentPage
         ActionButton.Text = isLoading
             ? "Verarbeite..."
             : string.IsNullOrEmpty(_userToken)
-                ? "Analyse starten (Gast)"
+                ? "Analyse starten"
                 : "Upload & Analyse starten";
     }
 }

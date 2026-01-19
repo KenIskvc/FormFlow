@@ -11,3 +11,8 @@ public class AnalysisDto
     public DateTime CreatedAt { get; set; }
     public string Report { get; set; } = string.Empty;
 }
+public class VideoListDto
+{
+    public int Id { get; set; }
+    public string FileName { get; set; } = string.Empty;
+}

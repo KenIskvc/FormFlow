@@ -1,19 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="FormFlow.MobileApp.VideoManagementPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Videos">
+    x:Class="FormFlow.MobileApp.VideoManagementPage"
+    Title="Meine Videos">
 
-    <VerticalStackLayout Padding="20" Spacing="12">
-        <Label
-            Text="Video-Verwaltung"
-            FontSize="22"
-            FontAttributes="Bold" />
+    <Grid RowDefinitions="Auto,*">
 
         <Label
-            Text="Hier können Videos umbenannt, gelöscht oder neu analysiert werden."
-            FontSize="14"
-            TextColor="Gray" />
-    </VerticalStackLayout>
+            Text="Gespeicherte Videos"
+            FontSize="20"
+            Padding="10"
+            HorizontalOptions="Center" />
 
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding MyVideos}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Margin="10,5"
+                        Padding="10"
+                        StrokeShape="RoundRectangle 6">
+
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout>
+                                <Label
+                                    Text="{Binding FileName}"
+                                    FontAttributes="Bold" />
+
+                                <Label
+                                    Text="{Binding Id, StringFormat='ID: {0}'}"
+                                    FontSize="10"
+                                    TextColor="Gray" />
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout
+                                Grid.Column="1"
+                                Spacing="6">
+
+                                <Button
+                                    Text="Rename"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnRenameClicked" />
+
+                                <Button
+                                    Text="Re-analyze"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnReAnalyzeClicked" />
+
+                                <Button
+                                    Text="🗑️"
+                                    BackgroundColor="Salmon"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnDeleteClicked" />
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>
