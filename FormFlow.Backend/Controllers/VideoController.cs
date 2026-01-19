@@ -33,9 +33,6 @@ public class VideoController : ControllerBase {
         return Ok(videos);
     }
 
-    // =========================
-    // UPLOAD + ANALYSE
-    // =========================
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(
         [FromForm] UploadRequest request,
@@ -43,9 +40,7 @@ public class VideoController : ControllerBase {
         if (request.File == null || request.File.Length == 0)
             return BadRequest("No file uploaded.");
 
-        // -------------------------
         // Video in Bytes lesen
-        // -------------------------
         byte[] videoBytes;
         using (var ms = new MemoryStream()) {
             await request.File.CopyToAsync(ms, ct);
