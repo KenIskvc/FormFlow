@@ -2,33 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FormFlow.MobileApp.UploadPage"
-             Title="UploadPage">
+             Title="Video Analyse">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <!-- <Label  -->
-            <!--     Text="Upload" -->
-            <!--     VerticalOptions="Center"  -->
-            <!--     HorizontalOptions="Center" /> -->
+        <VerticalStackLayout Spacing="25" Padding="30">
 
-            <!-- Page Heading -->
-            <Label
-                Text="Upload Training Video"
-                FontSize="24"
-                FontAttributes="Bold"
-                HorizontalOptions="Center" />
+            <Image Source="form_flow_logo.png"
+                   HeightRequest="120"
+                   HorizontalOptions="Center" />
 
-            <!-- Description -->
-            <Label
-                Text="Upload a training video to start the analysis."
-                FontSize="14"
-                HorizontalTextAlignment="Center" />
+            <Label Text="Trainings-Analyse"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
 
-            <Button Text="Select a video"
-                    Clicked="OnSelectVideoClicked"/>
+            <Button Text="Video auswählen"
+                    Clicked="OnSelectVideoClicked"
+                    BackgroundColor="#2196F3" />
+
+            <VerticalStackLayout x:Name="SelectedVideoArea"
+                                 IsVisible="False"
+                                 Spacing="15">
+
+                <Label x:Name="FileNameLabel"
+                       TextColor="Gray"
+                       HorizontalOptions="Center" />
+
+                <Button x:Name="ActionButton"
+                        Text="Analyse starten"
+                        Clicked="OnUploadAndAnalyzeClicked"
+                        BackgroundColor="#4CAF50"
+                        HeightRequest="50" />
+
+                <ActivityIndicator x:Name="LoadingIndicator"
+                                   IsRunning="False"
+                                   IsVisible="True"
+                                   HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
         </VerticalStackLayout>
     </ScrollView>
-    
 </ContentPage>

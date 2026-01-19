@@ -4,10 +4,14 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FormFlow.MobileApp"
-    Title="FormFlow">
-
-    <TabBar>
-
+    Title="FormFlow.MobileApp">
+    
+    <ShellContent
+    Title="Login"
+    ContentTemplate="{DataTemplate local:LoginPage}"
+    Route="LoginPage" />
+    
+    <TabBar Route="App">
         <!-- Start -->
         <ShellContent
             Title="Start"
@@ -31,7 +35,6 @@
             Title="Videos"
             Route="VideoManagementPage"
             ContentTemplate="{DataTemplate local:VideoManagementPage}" />
-
     </TabBar>
-
+    
 </Shell>
