@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FormFlow.MobileApp.VideoManagementPage"
-             Title="Videos">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="FormFlow.MobileApp.VideoManagementPage"
+    Title="Meine Videos">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="20" Padding="25">
+    <Grid RowDefinitions="Auto,*">
 
-            <Label Text="Video Management"
-                   FontSize="26"
-                   FontAttributes="Bold" />
+        <Label
+            Text="Gespeicherte Videos"
+            FontSize="20"
+            Padding="10"
+            HorizontalOptions="Center" />
 
-            <Label Text="Manage your uploads: rename, delete, or start a new analysis."
-                   FontSize="15"
-                   TextColor="Gray" />
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding MyVideos}">
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,5" />
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Margin="10,5"
+                        Padding="10"
+                        StrokeShape="RoundRectangle 6">
 
-            <CollectionView x:Name="VideosListView">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="0,8" 
-                                Padding="15" 
-                                StrokeShape="RoundRectangle 12" 
-                                BackgroundColor="#F5F5F5">
+                        <Grid ColumnDefinitions="*,Auto">
 
-                            <Grid ColumnDefinitions="*, Auto, Auto, Auto">
+                            <VerticalStackLayout>
+                                <Label
+                                    Text="{Binding FileName}"
+                                    FontAttributes="Bold" />
 
-                                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
-                                    <Label Text="{Binding FileName}" 
-                                           FontSize="16" TextColor="Black"
-                                           FontAttributes="Bold" />
-                                    <Label Text="{Binding UploadDate}" 
-                                           FontSize="12" 
-                                           TextColor="Gray" />
-                                </VerticalStackLayout>
+                                <Label
+                                    Text="{Binding Id, StringFormat='ID: {0}'}"
+                                    FontSize="10"
+                                    TextColor="Gray" />
+                            </VerticalStackLayout>
 
-                                <Button Grid.Column="1" 
-                                        Text="Re-analyze" 
-                                        Clicked="OnReAnalyzeClicked" 
-                                        Margin="5,0" 
-                                        BackgroundColor="#4CAF50" 
-                                        TextColor="White"
-                                        HeightRequest="40" />
+                            <HorizontalStackLayout
+                                Grid.Column="1"
+                                Spacing="6">
 
-                                <Button Grid.Column="2" 
-                                        Text="Rename" 
-                                        Clicked="OnRenameClicked" 
-                                        Margin="5,0" 
-                                        BackgroundColor="#2196F3" 
-                                        TextColor="White"
-                                        HeightRequest="40" />
+                                <Button
+                                    Text="Rename✏️"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnRenameClicked" />
 
-                                <Button Grid.Column="3" 
-                                        Text="Delete" 
-                                        Clicked="OnDeleteClicked" 
-                                        BackgroundColor="#FF5252" 
-                                        TextColor="White"
-                                        HeightRequest="40" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                                <Button
+                                    Text="Re-analyze🔁"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnReAnalyzeClicked" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+                                <Button
+                                    Text="🗑️"
+                                    BackgroundColor="Salmon"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnDeleteClicked" />
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

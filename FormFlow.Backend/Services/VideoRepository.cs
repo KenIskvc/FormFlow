@@ -23,9 +23,12 @@ public class VideoRepository : IVideoRepository {
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateVideoAsync(Video video) {
-        _context.Entry(video).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+    public async Task UpdateVideoNameAsync(int videoId, string newName)
+    {
+        await _context.Videos
+            .Where(v => v.Id == videoId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(v => v.FileName, newName));
     }
 
     public async Task DeleteVideoAsync(Video video) {

@@ -26,6 +26,26 @@ public class VideoController : ControllerBase {
         _poseService = poseService;
         _userManager = userManager;
     }
+    // =========================
+    // GET USER VIDEOS (Must 09)
+    // =========================
+    [Authorize]
+    [HttpGet("my-videos")]
+    public async Task<IActionResult> GetMyVideos(CancellationToken ct)
+    {
+        // 1. User identifizieren
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        var videos = await _videoRepository.GetVideosByUserIdAsync(user.Id);
+
+        var response = videos.Select(v => new {
+            v.Id,
+            v.FileName,
+        });
+
+        return Ok(response);
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetVideos(CancellationToken ct) {
@@ -111,7 +131,8 @@ public class VideoController : ControllerBase {
     // =========================
     [Authorize]
     [HttpPut("rename/{id:int}")]
-    public async Task<IActionResult> Rename(int id, [FromBody] string newName) {
+    public async Task<IActionResult> Rename(int id, [FromBody] string newName)
+    {
         if (string.IsNullOrWhiteSpace(newName))
             return BadRequest("Invalid name.");
 
@@ -123,11 +144,11 @@ public class VideoController : ControllerBase {
         if (video.UserId != user!.Id)
             return Forbid();
 
-        video.FileName = newName;
-        await _videoRepository.UpdateVideoAsync(video);
+        await _videoRepository.UpdateVideoNameAsync(id, newName);
 
         return Ok();
     }
+
 
     // =========================
     // DELETE

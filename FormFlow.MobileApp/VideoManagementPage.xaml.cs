@@ -1,52 +1,147 @@
 using System.Collections.ObjectModel;
+using FormFlow.MobileApp.DTOs;
+using FormFlow.MobileApp.Services;
 
 namespace FormFlow.MobileApp;
 
 public partial class VideoManagementPage : ContentPage
 {
-    public class VideoItem
-    {
-        public string FileName { get; set; } = string.Empty;
-        public string UploadDate { get; set; } = string.Empty;
-    }
+    private readonly VideoService _videoService;
+    private readonly TokenStore _tokenStore;
 
-    public ObservableCollection<VideoItem> MyVideos { get; set; }
+    public ObservableCollection<VideoListDto> MyVideos { get; } = new();
 
     public VideoManagementPage()
     {
         InitializeComponent();
 
-        // FR-M09: Beispiel-Daten
-        MyVideos = new ObservableCollection<VideoItem>
+        var httpClient = new HttpClient
         {
-            new VideoItem { FileName = "Serve_Practice.mp4", UploadDate = "2026-01-14" },
-            new VideoItem { FileName = "Match_Analysis_Final.mp4", UploadDate = "2026-01-15" }
+            BaseAddress = new Uri("https://localhost:7110/")
         };
 
-        VideosListView.ItemsSource = MyVideos;
+        _videoService = new VideoService(httpClient);
+        _tokenStore = new TokenStore();
+
+        BindingContext = this;
     }
 
-    private async void OnReAnalyzeClicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-        await DisplayAlert("Analysis", "Re-analysis started for this video.", "OK");
+        base.OnAppearing();
+        await LoadVideosAsync();
     }
 
-    private async void OnRenameClicked(object sender, EventArgs e)
+    private async Task LoadVideosAsync()
     {
-        string newName = await DisplayPromptAsync("Rename", "New name:");
-        if (!string.IsNullOrEmpty(newName))
+        try
         {
-            await DisplayAlert("Success", $"Renamed to {newName}", "OK");
+            var token = await _tokenStore.GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token))
+                return;
+
+            var videos = await _videoService.GetMyVideosAsync(token);
+
+            MyVideos.Clear();
+            foreach (var v in videos)
+                MyVideos.Add(v);
+        }
+        catch
+        {
+            await DisplayAlert("Fehler", "Videos konnten nicht geladen werden.", "OK");
         }
     }
 
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Delete", "Are you sure?", "Yes", "No");
-        if (confirm)
+        if (sender is not Button btn ||
+            btn.CommandParameter is not VideoListDto video)
+            return;
+
+        bool confirm = await DisplayAlert(
+            "Löschen",
+            $"Möchtest du „{video.FileName}“ wirklich löschen?",
+            "Ja",
+            "Nein");
+
+        if (!confirm)
+            return;
+
+        try
         {
-            // Logik zum Entfernen aus der Liste (optional für den Prototyp)
-            await DisplayAlert("Deleted", "Video removed.", "OK");
+            var token = await _tokenStore.GetAccessTokenAsync();
+            await _videoService.DeleteVideoAsync(video.Id, token);
+            MyVideos.Remove(video);
+        }
+        catch
+        {
+            await DisplayAlert("Fehler", "Video konnte nicht gelöscht werden.", "OK");
+        }
+    }
+
+    private async void OnRenameClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button btn ||
+            btn.CommandParameter is not VideoListDto video)
+            return;
+
+        var newName = await DisplayPromptAsync(
+            "Umbenennen",
+            "Neuer Dateiname:",
+            initialValue: video.FileName);
+
+        if (string.IsNullOrWhiteSpace(newName) ||
+            newName == video.FileName)
+            return;
+
+        try
+        {
+            var token = await _tokenStore.GetAccessTokenAsync();
+            await _videoService.RenameVideoAsync(video.Id, newName, token);
+
+            int index = MyVideos.IndexOf(video);
+            MyVideos.RemoveAt(index);
+            video.FileName = newName;
+            MyVideos.Insert(index, video);
+        }
+        catch
+        {
+            await DisplayAlert("Fehler", "Umbenennen fehlgeschlagen.", "OK");
+        }
+    }
+
+    private async void OnReAnalyzeClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button btn ||
+            btn.CommandParameter is not VideoListDto video)
+            return;
+
+        bool confirm = await DisplayAlert(
+            "Re-Analyse",
+            $"Video „{video.FileName}“ erneut analysieren?",
+            "Ja",
+            "Abbrechen");
+
+        if (!confirm)
+            return;
+
+        try
+        {
+            var token = await _tokenStore.GetAccessTokenAsync();
+
+            var result = await _videoService.ReAnalyzeAsync(
+                video.Id,
+                token,
+                CancellationToken.None);
+
+            await DisplayAlert(
+                "Analyse abgeschlossen",
+                $"Fehler gefunden: {result.ErrorCount}",
+                "OK");
+        }
+        catch
+        {
+            await DisplayAlert("Fehler", "Re-Analyse fehlgeschlagen.", "OK");
         }
     }
 }
