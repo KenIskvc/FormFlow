@@ -17,7 +17,8 @@
                 Margin="6"
                 CornerRadius="16"
                 BorderColor="#CCCCCC"
-                HasShadow="False">
+                HasShadow="False"
+                HeightRequest="140">
 
                     <!-- Hover / Selection States -->
                     <VisualStateManager.VisualStateGroups>
@@ -25,22 +26,23 @@
 
                             <VisualState Name="Normal">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="White" />
+                                    <Setter Property="BackgroundColor" Value="#1E1E1E" /> 
+                                    <Setter Property="BorderColor" Value="#3366FF" />
                                 </VisualState.Setters>
                             </VisualState>
 
                             <!-- Hover (Desktop only) -->
                             <VisualState Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#F2F2F2" />
+                                    <Setter Property="BackgroundColor" Value="#2A2A2A" />
                                 </VisualState.Setters>
                             </VisualState>
 
                             <!-- Selection -->
                             <VisualState Name="Selected">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#E6F0FF" />
-                                    <Setter Property="BorderColor" Value="#3366FF" />
+                                    <Setter Property="BackgroundColor" Value="#1F2A44" />
+                                    <Setter Property="BorderColor" Value="#4C7BFF" />
                                 </VisualState.Setters>
                             </VisualState>
 
@@ -50,11 +52,17 @@
                     <!-- Inhalt -->
                     <VerticalStackLayout
                     Spacing="6"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Start">
 
-                        <Label Text="{Binding Title}" />
-                        <Label Text="{Binding Date}" />
+                        <Label
+                            Text="{Binding VideoTitle}"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="2"
+                            HorizontalTextAlignment="Start" />
+                        <Label Text="{Binding Date}"/>
                         <Label Text="{Binding Status}" TextColor="{Binding StatusColor}" />
                         <Label Text="{Binding ErrorCountText}" />
 

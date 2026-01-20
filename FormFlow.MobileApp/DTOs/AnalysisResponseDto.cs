@@ -1,4 +1,6 @@
-﻿namespace FormFlow.MobileApp.DTOs;
+﻿using System.Text.Json.Serialization;
+
+namespace FormFlow.MobileApp.DTOs;
 
 public class AnalysisResponseDto
 {
@@ -7,4 +9,6 @@ public class AnalysisResponseDto
     public bool IsPersisted => AnalysisId.HasValue;
     public int ErrorCount { get; set; }
     public string Report { get; set; } = string.Empty;
+    public string VideoTitle { get; set; } = string.Empty;
+
 }

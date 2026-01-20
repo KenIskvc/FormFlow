@@ -7,7 +7,7 @@
     <Grid RowDefinitions="Auto,*">
 
         <Label
-            Text="Gespeicherte Videos"
+            Text="My Videos"
             FontSize="20"
             Padding="10"
             HorizontalOptions="Center" />
@@ -33,7 +33,7 @@
                                 <Label
                                     Text="{Binding Id, StringFormat='ID: {0}'}"
                                     FontSize="10"
-                                    TextColor="Gray" />
+                                    TextColor="{StaticResource Gray100}" />
                             </VerticalStackLayout>
 
                             <HorizontalStackLayout
@@ -42,17 +42,21 @@
 
                                 <Button
                                     Text="Rename"
+                                    TextColor="{StaticResource White}"
+                                    BackgroundColor="{StaticResource Primary}"
                                     CommandParameter="{Binding .}"
                                     Clicked="OnRenameClicked" />
 
                                 <Button
                                     Text="Re-analyze"
+                                    TextColor="{StaticResource White}"
+                                    BackgroundColor="{StaticResource Primary}"
                                     CommandParameter="{Binding .}"
                                     Clicked="OnReAnalyzeClicked" />
 
                                 <Button
                                     Text="🗑️"
-                                    BackgroundColor="Salmon"
+                                    BackgroundColor="Red"
                                     CommandParameter="{Binding .}"
                                     Clicked="OnDeleteClicked" />
                             </HorizontalStackLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FormFlow.MobileApp.UploadPage">
-
+             x:Class="FormFlow.MobileApp.UploadPage"
+             BackgroundColor="{StaticResource Gray950}">
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">
 
@@ -13,9 +13,12 @@
             <Label Text="Analyze your skills"
                    FontSize="24"
                    FontAttributes="Bold"
+                   TextColor="{StaticResource White}" 
                    HorizontalOptions="Center" />
 
             <Button Text="Select Video"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="{StaticResource White}"
                     Clicked="OnSelectVideoClicked"/>
 
             <VerticalStackLayout x:Name="SelectedVideoArea"
@@ -23,16 +26,18 @@
                                  Spacing="15">
 
                 <Label x:Name="FileNameLabel"
-                       TextColor="Gray"
+                       TextColor="{StaticResource Gray300}"
                        HorizontalOptions="Center" />
 
                 <Button x:Name="ActionButton"
                         Text="Analyse starten"
                         Clicked="OnUploadAndAnalyzeClicked"
-                        BackgroundColor="#4CAF50"
+                        BackgroundColor="{StaticResource Primary}" 
+                        TextColor="{StaticResource White}"
                         HeightRequest="50" />
 
                 <ActivityIndicator x:Name="LoadingIndicator"
+                                   Color="{StaticResource Primary}"
                                    IsRunning="False"
                                    IsVisible="True"
                                    HorizontalOptions="Center" />

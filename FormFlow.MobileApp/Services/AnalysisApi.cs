@@ -10,12 +10,18 @@ public class AnalysisApi : IAnalysisApi
     private readonly HttpClient _httpClient;
     private readonly ITokenStore _tokenStore;
 
+    // Creates a new API service instance with all required dependencies.
+    // This class is the single place responsible for making HTTP calls
+    // related to analyses.
     public AnalysisApi(HttpClient httpClient, ITokenStore tokenStore)
     {
         _httpClient = httpClient;
         _tokenStore = tokenStore;
     }
 
+    // Retrieves all persisted analyses for the currently authenticated user.
+    // If no access token is available, an empty list is returned.
+    // This method maps the backend JSON response into AnalysisResponseDto objects.
     public async Task<IReadOnlyList<AnalysisResponseDto>> GetMyAnalysesAsync(
     CancellationToken ct)
     {
@@ -40,6 +46,9 @@ public class AnalysisApi : IAnalysisApi
             : result;
     }
 
+    // Uploads a video stream to the backend and starts a new analysis.
+    // This method sends the video as multipart/form-data and returns
+    // the analysis result as an AnalysisResponseDto.
     public async Task<AnalysisResponseDto> AnalyzeAsync(
     Stream videoStream,
     string fileName,
@@ -71,4 +80,25 @@ public class AnalysisApi : IAnalysisApi
 
         return dto;
     }
+
+    // Deletes a persisted analysis on the backend by its ID.
+    public async Task DeleteAnalysisAsync(
+        int analysisId,
+        CancellationToken ct)
+    {
+        var accessToken = await _tokenStore.GetAccessTokenAsync();
+
+        if (string.IsNullOrEmpty(accessToken))
+            throw new InvalidOperationException("User not authenticated.");
+
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await _httpClient.DeleteAsync(
+            $"api/analysis/{analysisId}",
+            ct);
+
+        response.EnsureSuccessStatusCode();
+    }
+
 }
