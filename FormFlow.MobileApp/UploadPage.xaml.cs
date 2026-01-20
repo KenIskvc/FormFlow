@@ -52,7 +52,7 @@ public partial class UploadPage : ContentPage
         }
         catch
         {
-            await DisplayAlert("Fehler", "Video konnte nicht geladen werden.", "OK");
+            await DisplayAlert("Error", "Video couldn't be loaded.", "OK");
         }
     }
 
@@ -72,13 +72,13 @@ public partial class UploadPage : ContentPage
                     CancellationToken.None);
 
             await DisplayAlert(
-                "Analyse abgeschlossen",
-                $"Analysezeitpunkt: {result.Analysis.CreatedAt}",
+                "Anaysis finished",
+                $"Analysis created at: {result.Analysis.CreatedAt}",
                 "OK");
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Upload-Fehler", ex.Message, "OK");
+            await DisplayAlert("Upload-Error", ex.Message, "OK");
         }
         finally
         {
@@ -94,7 +94,7 @@ public partial class UploadPage : ContentPage
         ActionButton.Text = isLoading
             ? "Verarbeite..."
             : string.IsNullOrEmpty(_userToken)
-                ? "Analyse starten"
-                : "Upload & Analyse starten";
+                ? "Start Analysis"
+                : "Upload & Analyze";
     }
 }

@@ -48,7 +48,7 @@ public partial class VideoManagementPage : ContentPage
         }
         catch
         {
-            await DisplayAlert("Fehler", "Videos konnten nicht geladen werden.", "OK");
+            await DisplayAlert("Error", "Videos couldn't be loaded", "OK");
         }
     }
 
@@ -59,10 +59,10 @@ public partial class VideoManagementPage : ContentPage
             return;
 
         bool confirm = await DisplayAlert(
-            "Löschen",
-            $"Möchtest du „{video.FileName}“ wirklich löschen?",
-            "Ja",
-            "Nein");
+            "Delete",
+            $"Do you want to delete „{video.FileName}“ ?",
+            "Yes",
+            "No");
 
         if (!confirm)
             return;
@@ -75,7 +75,7 @@ public partial class VideoManagementPage : ContentPage
         }
         catch
         {
-            await DisplayAlert("Fehler", "Video konnte nicht gelöscht werden.", "OK");
+            await DisplayAlert("Error", "Video couldn't be deleted", "OK");
         }
     }
 
@@ -106,7 +106,7 @@ public partial class VideoManagementPage : ContentPage
         }
         catch
         {
-            await DisplayAlert("Fehler", "Umbenennen fehlgeschlagen.", "OK");
+            await DisplayAlert("Error", "Rename failed", "OK");
         }
     }
 
@@ -117,10 +117,10 @@ public partial class VideoManagementPage : ContentPage
             return;
 
         bool confirm = await DisplayAlert(
-            "Re-Analyse",
-            $"Video „{video.FileName}“ erneut analysieren?",
-            "Ja",
-            "Abbrechen");
+            "Re-Analyze",
+            $"Video „{video.FileName}“ analyze again?",
+            "Yes",
+            "Cancel");
 
         if (!confirm)
             return;
@@ -135,13 +135,13 @@ public partial class VideoManagementPage : ContentPage
                 CancellationToken.None);
 
             await DisplayAlert(
-                "Analyse abgeschlossen",
-                $"Fehler gefunden: {result.ErrorCount}",
+                "Analysis finished",
+                $"Error found: {result.ErrorCount}",
                 "OK");
         }
         catch
         {
-            await DisplayAlert("Fehler", "Re-Analyse fehlgeschlagen.", "OK");
+            await DisplayAlert("Error", "Re-Analysis failed", "OK");
         }
     }
 }
