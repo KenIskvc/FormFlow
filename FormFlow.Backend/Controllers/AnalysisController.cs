@@ -16,14 +16,18 @@ public class AnalysisController : ControllerBase {
     private readonly IPoseAnalysisServicecs _analaysisService;
     private readonly IVideoRepository _videoRepository;
     private readonly IAnalysisRepository _analysisRepository;
-    private const string AdminUserId = "c511f47d-a428-48e9-a942-48c090b9af04";
 
+    // Initializes the controller with all required dependencies.
+    // The controller itself contains no business logic;
+    // it only orchestrates services and repositories.
     public AnalysisController(IPoseAnalysisServicecs analaysisService, IVideoRepository videoRepository, IAnalysisRepository analysisRepository) {
         _analaysisService = analaysisService;
         _videoRepository = videoRepository;
         _analysisRepository = analysisRepository;
     }
 
+    // Analyzes a previously uploaded video identified by its ID.
+    // This endpoint requires authentication and persists the analysis result.
     [Authorize]
     [HttpPost("/analyze/{videoId}")]
 
@@ -78,42 +82,9 @@ public class AnalysisController : ControllerBase {
 
     }
 
-    /*
-     * This is how a possible call from the frontend could look like:
-        public async Task<string> AnalyzeAsync(
-        string filePath,
-        CancellationToken ct)
-        {
-            using var content = new MultipartFormDataContent();
-
-            await using var stream = File.OpenRead(filePath);
-
-            var fileContent = new StreamContent(stream);
-            fileContent.Headers.ContentType =
-                new System.Net.Http.Headers.MediaTypeHeaderValue("video/mp4");
-
-            content.Add(fileContent, "file", Path.GetFileName(filePath));
-
-            using var response = await _client.PostAsync("/analyze", content, ct);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-
-        EXAMPLE WITH FILEPICKER:
-
-
-        var result = await FilePicker.Default.PickAsync(
-        new PickOptions
-        {
-            PickerTitle = "Select video"
-        });
-
-        if (result != null)
-        {
-            var reportJson = await AnalyzeAsync(result.FullPath, ct);
-        }
-     */
+    // Analyzes a video uploaded directly via multipart/form-data.
+    // This endpoint does NOT persist the analysis result and can be
+    // used without authentication (session analysis).
     [AllowAnonymous]
     [HttpPost("/analyze")]
     [Consumes("multipart/form-data")]
@@ -142,13 +113,9 @@ public class AnalysisController : ControllerBase {
             Report = reportAsJson,
             VideoTitle = file.FileName
         });
-
-        //or as simple json
-        //return Ok(new {
-        //create = DateTime.UtcNow,
-        //report = reportAsJson
-        //})
     }
+
+    // Retrieves all analyses for the authenticated user.
 
     [Authorize]
     [HttpGet]
@@ -162,15 +129,7 @@ public class AnalysisController : ControllerBase {
 
         List<Analysis> analyses;
 
-        if (userId == AdminUserId)
-        {
-            analyses = await _analysisRepository.GetAllAnalysesAsync(ct);
-        }
-        // 👤 NORMALER USER: nur eigene
-        else
-        {
-            analyses = await _analysisRepository.GetAnalysesForUserAsync(userId, ct);
-        }
+        analyses = await _analysisRepository.GetAnalysesForUserAsync(userId, ct);
 
         var result = analyses.Select(a => new AnalysisResponseDto
         {
@@ -184,6 +143,9 @@ public class AnalysisController : ControllerBase {
         return Ok(result);
     }
 
+    // Counts the number of technical errors in an analysis report.
+    // This method parses the JSON report and extracts the size
+    // of the "technicalErrors" array.
     private static int CountErrorsFromReport(string reportJson)
     {
         if (string.IsNullOrWhiteSpace(reportJson))
@@ -204,6 +166,7 @@ public class AnalysisController : ControllerBase {
         return 0;
     }
 
+    // Deletes a persisted analysis by its ID.
     [Authorize]
     [HttpDelete("{analysisId}")]
     public async Task<IActionResult> DeleteAnalysis(
@@ -220,8 +183,8 @@ public class AnalysisController : ControllerBase {
         if (analysis == null)
             return NotFound();
 
-        // 🔐 Sicherheitscheck: nur Besitzer oder Admin
-        if (userId != AdminUserId && analysis.Video.UserId != userId)
+        // Sicherheitscheck: nur Besitzer
+        if (analysis.Video.UserId != userId)
             return Forbid();
 
         await _analysisRepository.DeleteAsync(analysis, ct);

@@ -26,6 +26,10 @@ public class AnalysisListItem
     public string ErrorCountText =>
         ErrorCount == 0 ? "No errors" : $"{ErrorCount} error(s)";
 
+    // Parses the raw JSON report into a strongly typed AnalysisReport object.
+    // This allows the rest of the application to work with structured data
+    // instead of manually parsing JSON in the UI or ViewModels.
+    // Returns null if the report is empty or cannot be deserialized.
     public AnalysisReport? ParsedReport
     {
         get

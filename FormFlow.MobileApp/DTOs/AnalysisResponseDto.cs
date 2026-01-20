@@ -9,8 +9,6 @@ public class AnalysisResponseDto
     public bool IsPersisted => AnalysisId.HasValue;
     public int ErrorCount { get; set; }
     public string Report { get; set; } = string.Empty;
-
-    [JsonPropertyName("videoTitle")]
     public string VideoTitle { get; set; } = string.Empty;
 
 }

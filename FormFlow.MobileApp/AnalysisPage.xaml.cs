@@ -12,6 +12,8 @@ public partial class AnalysisPage : ContentPage
     private readonly ITokenStore _tokenStore;
     private readonly IAnalysisApi _analysisApi;
 
+    // Constructor that initializes dependencies and sets up the page.
+    // It wires the collection to the UI and prepares the initial layout.
     public AnalysisPage(
         ITokenStore tokenStore,
         IAnalysisApi analysisApi)
@@ -26,7 +28,9 @@ public partial class AnalysisPage : ContentPage
         SetInitialLayout();
     }
 
-
+    // Called every time the page becomes visible.
+    // Responsible for loading the user's persisted analyses
+    // from the backend and refreshing the UI
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -46,6 +50,8 @@ public partial class AnalysisPage : ContentPage
             AddAnalysisFromDto(dto);
     }
 
+    // Sets an initial grid layout with a fixed number of columns.
+    // This is used before the actual screen size is known.
     private void SetInitialLayout()
     {
         AnalysisCollection.ItemsLayout =
@@ -56,6 +62,9 @@ public partial class AnalysisPage : ContentPage
             };
     }
 
+    // Converts an AnalysisResponseDto (transport object)
+    // into an AnalysisListItem (UI model) and inserts it
+    // at the top of the list.
     public void AddAnalysisFromDto(AnalysisResponseDto dto)
     {
         _analyses.Insert(0, new AnalysisListItem
@@ -68,12 +77,16 @@ public partial class AnalysisPage : ContentPage
         });
     }
 
+    // Triggered whenever the page size changes (e.g. window resize).
+    // Used to recalculate the grid layout dynamically.
     protected override void OnSizeAllocated(double width, double height)
     {
         base.OnSizeAllocated(width, height);
         UpdateGridSpan();
     }
 
+    // Dynamically calculates how many cards fit into the available width
+    // and updates the grid layout accordingly.
     private void UpdateGridSpan()
     {
         if (Width <= 0)
@@ -91,6 +104,9 @@ public partial class AnalysisPage : ContentPage
             };
     }
 
+    // Handles selection of an analysis card.
+    // Shows an action sheet that lets the user open, download,
+    // or delete the selected analysis.
     private async void OnAnalysisSelected(object? sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is not AnalysisListItem selected)
@@ -122,6 +138,9 @@ public partial class AnalysisPage : ContentPage
         ((CollectionView)sender).SelectedItem = null;
     }
 
+    // Deletes an analysis.
+    // Session-only analyses are removed locally,
+    // persisted analyses are deleted via the backend API.
     private async void DeleteAnalysis(AnalysisListItem item)
     {
         if (!item.IsPersisted)
@@ -156,7 +175,9 @@ public partial class AnalysisPage : ContentPage
         }
     }
 
-
+    // Downloads the analysis report as a PDF.
+    // This is currently a placeholder and will later
+    // call the backend PDF endpoint.
     private async Task DownloadPdfAsync(AnalysisListItem item)
     {
         // später:
@@ -168,6 +189,8 @@ public partial class AnalysisPage : ContentPage
             "OK");
     }
 
+    // Navigates to the analysis detail page
+    // to show a structured, human-readable analysis view.
     private async void OpenAnalysis(AnalysisListItem item)
     {
         await Navigation.PushAsync(new AnalysisDetailPage(item));
