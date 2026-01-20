@@ -2,8 +2,7 @@
 <ContentPage
     x:Class="FormFlow.MobileApp.AnalysisPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Analyses">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <CollectionView
     x:Name="AnalysisCollection"
@@ -26,23 +25,29 @@
 
                             <VisualState Name="Normal">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#1E1E1E" /> 
-                                    <Setter Property="BorderColor" Value="#3366FF" />
+                                    <Setter Property="BackgroundColor" Value="transparent" /> 
+                                    <Setter Property="BorderColor" 
+                                            Value="{StaticResource Primary}" />
                                 </VisualState.Setters>
                             </VisualState>
 
                             <!-- Hover (Desktop only) -->
                             <VisualState Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#2A2A2A" />
+                                    <Setter Property="BackgroundColor" 
+                                            Value="transparent" />
+                                    <Setter Property="BorderColor" 
+                                            Value="{StaticResource PrimaryDark}" />
                                 </VisualState.Setters>
                             </VisualState>
 
                             <!-- Selection -->
                             <VisualState Name="Selected">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#1F2A44" />
-                                    <Setter Property="BorderColor" Value="#4C7BFF" />
+                                    <Setter Property="BackgroundColor" 
+                                            Value="transparent" />
+                                    <Setter Property="BorderColor" 
+                                            Value="{StaticResource Magenta}" />
                                 </VisualState.Setters>
                             </VisualState>
 
