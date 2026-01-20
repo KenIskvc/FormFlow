@@ -63,7 +63,8 @@ public partial class AnalysisPage : ContentPage
             AnalysisId = dto.AnalysisId,
             CreatedAt = dto.CreatedAt,
             ErrorCount = dto.ErrorCount,
-            Report = dto.Report
+            Report = dto.Report,
+            VideoTitle = dto.VideoTitle
         });
     }
 
@@ -121,21 +122,40 @@ public partial class AnalysisPage : ContentPage
         ((CollectionView)sender).SelectedItem = null;
     }
 
-    private void DeleteAnalysis(AnalysisListItem item)
+    private async void DeleteAnalysis(AnalysisListItem item)
     {
-        // Session-Analyse
         if (!item.IsPersisted)
         {
             _analyses.Remove(item);
             return;
         }
 
-        // Persistierte Analyse
-        // später:
-        // await Api.DeleteAnalysis(item.AnalysisId.Value);
+        bool confirm = await DisplayAlert(
+            "Delete analysis",
+            "Are you sure you want to delete this analysis? This action cannot be undone.",
+            "Delete",
+            "Cancel");
 
-        _analyses.Remove(item);
+        if (!confirm)
+            return;
+
+        try
+        {
+            await _analysisApi.DeleteAnalysisAsync(
+                item.AnalysisId!.Value,
+                CancellationToken.None);
+
+            _analyses.Remove(item);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert(
+                "Error",
+                "The analysis could not be deleted.",
+                "OK");
+        }
     }
+
 
     private async Task DownloadPdfAsync(AnalysisListItem item)
     {
@@ -150,12 +170,7 @@ public partial class AnalysisPage : ContentPage
 
     private async void OpenAnalysis(AnalysisListItem item)
     {
-        // Später: eigene Detail-Page
-        await DisplayAlert(
-            "Analysis details",
-            item.Report,
-            "OK"
-        );
+        await Navigation.PushAsync(new AnalysisDetailPage(item));
     }
 
 }

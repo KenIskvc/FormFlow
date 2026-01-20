@@ -3,14 +3,9 @@
 public class AnalysisResponseDto
 {
     public DateTime CreatedAt { get; set; }
-
-    // Nur gesetzt, wenn gespeichert (eingeloggt)
     public int? AnalysisId { get; set; }
-
     public bool IsPersisted => AnalysisId.HasValue;
-
     public int ErrorCount { get; set; }
-
-    // Das eigentliche Analyse-Ergebnis
     public string Report { get; set; } = default!;
+    public string VideoTitle { get; set; } = string.Empty;
 }

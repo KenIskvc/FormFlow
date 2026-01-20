@@ -72,7 +72,8 @@ public class AnalysisController : ControllerBase {
             CreatedAt = analysis.CreatedAt,
             AnalysisId = analysis.Id,
             ErrorCount = errorCount,
-            Report = analysis.Report
+            Report = analysis.Report,
+            VideoTitle = video.FileName
         });
 
     }
@@ -138,7 +139,8 @@ public class AnalysisController : ControllerBase {
             CreatedAt = DateTime.UtcNow,
             AnalysisId = null,
             ErrorCount = errorCount,
-            Report = reportAsJson
+            Report = reportAsJson,
+            VideoTitle = file.FileName
         });
 
         //or as simple json
@@ -175,7 +177,8 @@ public class AnalysisController : ControllerBase {
             AnalysisId = a.Id,
             CreatedAt = a.CreatedAt,
             ErrorCount = CountErrorsFromReport(a.Report),
-            Report = a.Report
+            Report = a.Report,
+            VideoTitle = a.Video.FileName
         }).ToList();
 
         return Ok(result);
@@ -199,6 +202,31 @@ public class AnalysisController : ControllerBase {
         catch{}
 
         return 0;
+    }
+
+    [Authorize]
+    [HttpDelete("{analysisId}")]
+    public async Task<IActionResult> DeleteAnalysis(
+    int analysisId,
+    CancellationToken ct)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var analysis = await _analysisRepository.GetByIdAsync(analysisId, ct);
+
+        if (analysis == null)
+            return NotFound();
+
+        // 🔐 Sicherheitscheck: nur Besitzer oder Admin
+        if (userId != AdminUserId && analysis.Video.UserId != userId)
+            return Forbid();
+
+        await _analysisRepository.DeleteAsync(analysis, ct);
+
+        return NoContent(); // 204
     }
 
 }

@@ -40,4 +40,21 @@ public class AnalysisRepository : IAnalysisRepository
             .ToListAsync(ct);
     }
 
+    public async Task<Analysis?> GetByIdAsync(
+    int analysisId,
+    CancellationToken ct)
+    {
+        return await _context.Analyses
+            .Include(a => a.Video)
+            .FirstOrDefaultAsync(a => a.Id == analysisId, ct);
+    }
+
+    public async Task DeleteAsync(
+        Analysis analysis,
+        CancellationToken ct)
+    {
+        _context.Analyses.Remove(analysis);
+        await _context.SaveChangesAsync(ct);
+    }
+
 }
