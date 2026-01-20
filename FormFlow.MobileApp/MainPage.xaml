@@ -23,8 +23,8 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Padding="15"
-                    StrokeShape="RoundRectangle 10"
-                    StrokeThickness="1">
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="1">
                             <Label Text="{Binding Name}" FontSize="16" />
                         </Border>
                     </DataTemplate>

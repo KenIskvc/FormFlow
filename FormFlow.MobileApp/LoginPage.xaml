@@ -39,11 +39,11 @@
                 BackgroundColor="{StaticResource  Primary}"
                 TextColor="{StaticResource  Black}" />
 
-            <Button Text="Continue as guest"
+            <!--<Button Text="Continue as guest"
                 Clicked="OnContinueAsGuestClicked"
                 BackgroundColor="Transparent"
                 TextColor="{StaticResource  Secondary}"
-                FontAttributes="Italic" />
+                FontAttributes="Italic" />-->
 
             <ActivityIndicator x:Name="BusyIndicator"
                                IsVisible="False"

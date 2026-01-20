@@ -37,7 +37,7 @@
 
         <!-- Analysen -->
         <ShellContent
-            Title="Analysen"
+            Title="Analyzes"
             Route="AnalysisPage"
             ContentTemplate="{DataTemplate local:AnalysisPage}" />
 

@@ -1,23 +1,19 @@
 using FormFlow.MobileApp.Services;
-using FormFlow.MobileApp.DTOs;
 
 namespace FormFlow.MobileApp;
 
-public partial class UploadPage : ContentPage
-{
+public partial class UploadPage : ContentPage {
     private FileResult? _selectedVideo;
     private readonly VideoService _videoService;
     private readonly TokenStore _tokenStore;
     private string _userToken = "";
 
-    public UploadPage()
-    {
+    public UploadPage() {
         InitializeComponent();
 
         _tokenStore = new TokenStore();
 
-        var httpClient = new HttpClient
-        {
+        var httpClient = new HttpClient {
             BaseAddress = new Uri("https://localhost:7110/"),
             Timeout = TimeSpan.FromMinutes(5)
         };
@@ -25,76 +21,62 @@ public partial class UploadPage : ContentPage
         _videoService = new VideoService(httpClient);
     }
 
-    protected override async void OnAppearing()
-    {
+    protected override async void OnAppearing() {
         base.OnAppearing();
         await CheckLoginStatusAsync();
     }
 
-    private async Task CheckLoginStatusAsync()
-    {
+    private async Task CheckLoginStatusAsync() {
         _userToken = await _tokenStore.GetAccessTokenAsync() ?? "";
         ActionButton.Text = string.IsNullOrEmpty(_userToken)
-            ? "Analyse starten (Gast)"
-            : "Upload & Analyse starten";
+            ? "Start Analysis"
+            : "Upload and Analyse";
     }
 
-    private async void OnSelectVideoClicked(object sender, EventArgs e)
-    {
-        try
-        {
+    private async void OnSelectVideoClicked(object sender, EventArgs e) {
+        try {
             _selectedVideo = await MediaPicker.Default.PickVideoAsync();
-            if (_selectedVideo != null)
-            {
-                FileNameLabel.Text = $"Datei: {_selectedVideo.FileName}";
+            if (_selectedVideo != null) {
+                FileNameLabel.Text = $"File: {_selectedVideo.FileName}";
                 SelectedVideoArea.IsVisible = true;
             }
-        }
-        catch
-        {
-            await DisplayAlert("Fehler", "Video konnte nicht geladen werden.", "OK");
+        } catch {
+            await DisplayAlert("Error", "Video couldn't be loaded.", "OK");
         }
     }
 
-    private async void OnUploadAndAnalyzeClicked(object sender, EventArgs e)
-    {
+    private async void OnUploadAndAnalyzeClicked(object sender, EventArgs e) {
         if (_selectedVideo == null)
             return;
 
-        try
-        {
+        try {
             SetLoading(true);
 
-            UploadResultDto result =
+            var result =
                 await _videoService.UploadAndAnalyzeAsync(
                     _selectedVideo,
                     _userToken,
                     CancellationToken.None);
 
             await DisplayAlert(
-                "Analyse abgeschlossen",
-                $"Analysezeitpunkt: {result.Analysis.CreatedAt}",
+                "Analysis completed",
+                $"Created {result.Analysis.CreatedAt}",
                 "OK");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Upload-Fehler", ex.Message, "OK");
-        }
-        finally
-        {
+        } catch (Exception ex) {
+            await DisplayAlert("Upload Error", ex.Message, "OK");
+        } finally {
             SetLoading(false);
         }
     }
 
-    private void SetLoading(bool isLoading)
-    {
+    private void SetLoading(bool isLoading) {
         LoadingIndicator.IsRunning = isLoading;
         ActionButton.IsEnabled = !isLoading;
 
         ActionButton.Text = isLoading
-            ? "Verarbeite..."
+            ? "Analyzing..."
             : string.IsNullOrEmpty(_userToken)
-                ? "Analyse starten"
-                : "Upload & Analyse starten";
+                ? "Start Analysis"
+                : "Upload and Analyze";
     }
 }
