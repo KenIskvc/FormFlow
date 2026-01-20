@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FormFlow.MobileApp.UploadPage"
-             Title="Video Analyse">
+             x:Class="FormFlow.MobileApp.UploadPage">
 
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">
 
-            <Image Source="form_flow_logo.png"
-                   HeightRequest="120"
+            <Image Source="form_flow_logo2.png"
+                   HeightRequest="250"
                    HorizontalOptions="Center" />
 
-            <Label Text="Trainings-Analyse"
+            <Label Text="Analyze your skills"
                    FontSize="24"
                    FontAttributes="Bold"
                    HorizontalOptions="Center" />
 
-            <Button Text="Video auswählen"
-                    Clicked="OnSelectVideoClicked"
-                    BackgroundColor="#2196F3" />
+            <Button Text="Select Video"
+                    Clicked="OnSelectVideoClicked"/>
 
             <VerticalStackLayout x:Name="SelectedVideoArea"
                                  IsVisible="False"

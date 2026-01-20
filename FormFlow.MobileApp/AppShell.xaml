@@ -5,16 +5,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FormFlow.MobileApp"
     Title="FormFlow.MobileApp">
+
+    <Shell.ToolbarItems>
+        <ToolbarItem x:Name="LoginToolbarItem"
+                     Text="Login"
+                     Order="Primary"
+                     Clicked="OnLoginClicked" />
+
+        <ToolbarItem x:Name="LogoutToolbarItem"
+                     Text="Logout"
+                     Order="Primary"
+                     Clicked="OnLogoutClicked" />
+    </Shell.ToolbarItems>
     
     <ShellContent
-    Title="Login"
     ContentTemplate="{DataTemplate local:LoginPage}"
     Route="LoginPage" />
     
     <TabBar Route="App">
         <!-- Start -->
         <ShellContent
-            Title="Start"
+            Title="Home"
             Route="MainPage"
             ContentTemplate="{DataTemplate local:MainPage}" />
 

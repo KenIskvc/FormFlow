@@ -35,6 +35,7 @@ builder.Services.Configure<IdentityOptions>(options => {
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
 });
+
 // Token auth for mobile/API clients
 builder.Services.AddAuthentication()
        .AddBearerToken(IdentityConstants.BearerScheme);
