@@ -30,7 +30,8 @@
                         <Frame
                             Padding="12"
                             CornerRadius="12"
-                            BorderColor="Red">
+                            BorderColor="Red"
+                            BackgroundColor="Transparent">
 
                                         <Label
                                 Text="{Binding Message}"
@@ -84,9 +85,15 @@
                 FontAttributes="Bold" />
 
             <CollectionView ItemsSource="{Binding Angles}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
+                </CollectionView.ItemsLayout>
+                
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="10" CornerRadius="12">
+                        <Frame Padding="10" CornerRadius="12" 
+                               BackgroundColor="Transparent" 
+                               BorderColor="{StaticResource Gray600}">
                             <VerticalStackLayout>
                                 <Label
                                     Text="{Binding Name}"
