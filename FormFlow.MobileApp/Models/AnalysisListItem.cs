@@ -1,4 +1,7 @@
-﻿public class AnalysisListItem
+﻿using System.Text.Json;
+using FormFlow.MobileApp.Models;
+
+public class AnalysisListItem
 {
     public int? AnalysisId { get; init; }
     public DateTime CreatedAt { get; init; }
@@ -22,4 +25,28 @@
 
     public string ErrorCountText =>
         ErrorCount == 0 ? "No errors" : $"{ErrorCount} error(s)";
+
+    public AnalysisReport? ParsedReport
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Report))
+                return null;
+
+            try
+            {
+                return JsonSerializer.Deserialize<AnalysisReport>(
+                    Report,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
+
 }

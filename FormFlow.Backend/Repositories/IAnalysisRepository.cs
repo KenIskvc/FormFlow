@@ -12,4 +12,8 @@ public interface IAnalysisRepository
 
     Task<List<Analysis>> GetAllAnalysesAsync(CancellationToken ct);
 
+    Task<Analysis?> GetByIdAsync(int analysisId, CancellationToken ct);
+    Task DeleteAsync(Analysis analysis, CancellationToken ct);
+
+
 }

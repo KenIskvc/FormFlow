@@ -71,4 +71,24 @@ public class AnalysisApi : IAnalysisApi
 
         return dto;
     }
+
+    public async Task DeleteAnalysisAsync(
+        int analysisId,
+        CancellationToken ct)
+    {
+        var accessToken = await _tokenStore.GetAccessTokenAsync();
+
+        if (string.IsNullOrEmpty(accessToken))
+            throw new InvalidOperationException("User not authenticated.");
+
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await _httpClient.DeleteAsync(
+            $"api/analysis/{analysisId}",
+            ct);
+
+        response.EnsureSuccessStatusCode();
+    }
+
 }

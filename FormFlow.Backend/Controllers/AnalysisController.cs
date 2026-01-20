@@ -204,4 +204,29 @@ public class AnalysisController : ControllerBase {
         return 0;
     }
 
+    [Authorize]
+    [HttpDelete("{analysisId}")]
+    public async Task<IActionResult> DeleteAnalysis(
+    int analysisId,
+    CancellationToken ct)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var analysis = await _analysisRepository.GetByIdAsync(analysisId, ct);
+
+        if (analysis == null)
+            return NotFound();
+
+        // 🔐 Sicherheitscheck: nur Besitzer oder Admin
+        if (userId != AdminUserId && analysis.Video.UserId != userId)
+            return Forbid();
+
+        await _analysisRepository.DeleteAsync(analysis, ct);
+
+        return NoContent(); // 204
+    }
+
 }

@@ -19,8 +19,6 @@ public interface IAnalysisApi
     // Persistierte Analysen für eingeloggten User
     Task<IReadOnlyList<AnalysisResponseDto>> GetMyAnalysesAsync(
         CancellationToken ct);
+    Task DeleteAnalysisAsync(int analysisId, CancellationToken ct);
 
-    // Später:
-    // Task DeleteAnalysisAsync(int analysisId, CancellationToken ct);
-    // Task<byte[]> DownloadPdfAsync(int analysisId, CancellationToken ct);
 }
