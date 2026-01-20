@@ -5,7 +5,7 @@ The analysis is based on detecting body keypoints in each video frame and comput
 
 The result is returned as a structured JSON object.
 
-#### Libraries
+### Libraries
 
 **MediaPipe**
 *Detect Body Keypoints*
