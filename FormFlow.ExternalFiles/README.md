@@ -5,6 +5,17 @@ The analysis is based on detecting body keypoints in each video frame and comput
 
 The result is returned as a structured JSON object.
 
+**Libraries**
+
+MediaPipe
+*Detect Body Keypoints*
+
+OpenCV
+*Read and decode the video and convert the BGR into RGB format so MediaPipe can process it.*
+
+NumPy
+*Performs numerical calculations like computing joint angles between keypoints.*
+
 ### Detected Body Keypoints
 
 ```json
