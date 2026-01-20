@@ -72,7 +72,8 @@ public class AnalysisController : ControllerBase {
             CreatedAt = analysis.CreatedAt,
             AnalysisId = analysis.Id,
             ErrorCount = errorCount,
-            Report = analysis.Report
+            Report = analysis.Report,
+            VideoTitle = video.FileName
         });
 
     }
@@ -138,7 +139,8 @@ public class AnalysisController : ControllerBase {
             CreatedAt = DateTime.UtcNow,
             AnalysisId = null,
             ErrorCount = errorCount,
-            Report = reportAsJson
+            Report = reportAsJson,
+            VideoTitle = file.FileName
         });
 
         //or as simple json
@@ -175,7 +177,8 @@ public class AnalysisController : ControllerBase {
             AnalysisId = a.Id,
             CreatedAt = a.CreatedAt,
             ErrorCount = CountErrorsFromReport(a.Report),
-            Report = a.Report
+            Report = a.Report,
+            VideoTitle = a.Video.FileName
         }).ToList();
 
         return Ok(result);

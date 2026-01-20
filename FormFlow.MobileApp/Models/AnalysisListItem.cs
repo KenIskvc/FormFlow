@@ -4,13 +4,12 @@
     public DateTime CreatedAt { get; init; }
     public int ErrorCount { get; init; }
     public bool IsPersisted => AnalysisId.HasValue;
-
-    // 🔑 WICHTIG: Rohdaten der Analyse
     public string Report { get; init; } = string.Empty;
+    public string VideoTitle { get; init; } = string.Empty;
+
 
     // ---------- UI-only ----------
-    public string Title =>
-        IsPersisted ? "Saved analysis" : "Session analysis";
+    public string Title => VideoTitle;
 
     public string Date =>
         CreatedAt.ToString("dd.MM.yyyy HH:mm");

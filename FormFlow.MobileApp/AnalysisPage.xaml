@@ -17,7 +17,8 @@
                 Margin="6"
                 CornerRadius="16"
                 BorderColor="#CCCCCC"
-                HasShadow="False">
+                HasShadow="False"
+                HeightRequest="140">
 
                     <!-- Hover / Selection States -->
                     <VisualStateManager.VisualStateGroups>
@@ -50,10 +51,16 @@
                     <!-- Inhalt -->
                     <VerticalStackLayout
                     Spacing="6"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Start">
 
-                        <Label Text="{Binding Title}" />
+                        <Label
+                            Text="{Binding VideoTitle}"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="2"
+                            HorizontalTextAlignment="Start" />
                         <Label Text="{Binding Date}" />
                         <Label Text="{Binding Status}" TextColor="{Binding StatusColor}" />
                         <Label Text="{Binding ErrorCountText}" />

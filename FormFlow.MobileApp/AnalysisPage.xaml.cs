@@ -63,7 +63,8 @@ public partial class AnalysisPage : ContentPage
             AnalysisId = dto.AnalysisId,
             CreatedAt = dto.CreatedAt,
             ErrorCount = dto.ErrorCount,
-            Report = dto.Report
+            Report = dto.Report,
+            VideoTitle = dto.VideoTitle
         });
     }
 
