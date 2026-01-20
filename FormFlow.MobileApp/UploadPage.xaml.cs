@@ -30,7 +30,7 @@ public partial class UploadPage : ContentPage {
         _userToken = await _tokenStore.GetAccessTokenAsync() ?? "";
         ActionButton.Text = string.IsNullOrEmpty(_userToken)
             ? "Start Analysis"
-            : "Upload and Analyse";
+            : "Upload and Analyze";
     }
 
     private async void OnSelectVideoClicked(object sender, EventArgs e) {
@@ -60,7 +60,7 @@ public partial class UploadPage : ContentPage {
 
             await DisplayAlert(
                 "Analysis completed",
-                $"Created {result.Analysis.CreatedAt}",
+                $"Created at:  {result.Analysis.CreatedAt}",
                 "OK");
         } catch (Exception ex) {
             await DisplayAlert("Upload Error", ex.Message, "OK");

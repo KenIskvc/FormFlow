@@ -86,8 +86,8 @@ public partial class VideoManagementPage : ContentPage
             return;
 
         var newName = await DisplayPromptAsync(
-            "Umbenennen",
-            "Neuer Dateiname:",
+            "Rename",
+            "New Filename:",
             initialValue: video.FileName);
 
         if (string.IsNullOrWhiteSpace(newName) ||
