@@ -17,6 +17,9 @@ public static class MauiProgram {
             });
 
         builder.Services.AddSingleton<ITokenStore, TokenStore>();
+
+        builder.Services.AddSingleton<AppShell>();
+
         builder.Services.AddTransient<TokenHandler>();
 
         builder.Services.AddHttpClient("FormFlow.Backend", client => {
@@ -27,10 +30,9 @@ public static class MauiProgram {
 
         builder.Services.AddTransient(sp =>
             sp.GetRequiredService<IHttpClientFactory>().CreateClient("FormFlow.Backend"));
+
         builder.Services.AddTransient<IAnalysisApi, AnalysisApi>();
-
-
-        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddTransient<IAuthService, AuthService>();
 
 #if DEBUG
         builder.Logging.AddDebug();

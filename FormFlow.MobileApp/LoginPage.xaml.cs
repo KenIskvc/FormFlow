@@ -40,6 +40,7 @@ public partial class LoginPage : ContentPage {
 
             await DisplayAlert("Success", "You are logged in.", "OK");
             await Shell.Current.GoToAsync("//App/MainPage");
+            ((AppShell)Shell.Current).SendAppearing();
 
         } finally {
             SetBusy(false);

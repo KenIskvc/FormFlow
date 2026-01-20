@@ -36,5 +36,11 @@ class AuthService : IAuthService {
         await _tokenStore.SaveAsync(tokens);
         return true;
     }
+    public Task LogoutAsync(CancellationToken ct) => _tokenStore.ClearAsync();
+
+    public async Task<bool> IsAuthenticated() {
+        var token = await _tokenStore.GetAccessTokenAsync();
+        return token != null;
+    }
 
 }

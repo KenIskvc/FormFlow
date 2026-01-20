@@ -48,6 +48,8 @@ public partial class RegisterPage : ContentPage {
         }
     }
 
+    private async void BackToLoginClicked(object? sender, EventArgs e) => await Shell.Current.GoToAsync("..");
+
     private void SetBusy(bool isBusy) {
         RegisterButton.IsEnabled = !isBusy;
         BusyIndicator.IsVisible = isBusy;
